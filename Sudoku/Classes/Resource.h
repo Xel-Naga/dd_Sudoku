@@ -43,6 +43,7 @@ static const char s_BtnCloseNormal[]   		= "Resources/Images/CloseNormal.png";
 static const char s_BtnCloseSelected[]   	= "Resources/Images/CloseSelected.png";
 
 static const char s_TestChs[]               = "测试";
+static const std::wstring s_LoadingChs               = L"加载中...";
 
 
 

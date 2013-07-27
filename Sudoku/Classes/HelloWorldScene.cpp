@@ -543,6 +543,8 @@ bool HelloWorld::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent) {
     pos.y = getBound(pos.y,g_pad->rect().getMaxY(),0,_background->getContentSize().height);
 
     //CCLOG("final pos x:%0.1f,y:%0.1f",pos.x,pos.y);
+
+    runFx(pos);
     
     g_pad->setPosition(pos);
     g_pad->setScale(0.1f);
@@ -559,5 +561,37 @@ bool HelloWorld::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent) {
 }
 void HelloWorld::ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent) {
 }
+
+void HelloWorld::runFx(cocos2d::CCPoint point) {
+    CCTextureCache::sharedTextureCache()->addImage("Resources/fx/light.png");
+	CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("Resources/fx/light.plist",CCTextureCache::sharedTextureCache()->textureForKey("Resources/fx/light.png"));
+	CCArray* sperci=CCArray::create();
+	
+	for(int i=0;i<18;i++){
+	sperci->addObject(CCSpriteFrameCache::sharedSpriteFrameCache()->spriteFrameByName(CCString::createWithFormat("%s%d.png","light",i)->getCString()));
+	}
+	CCSprite* monst=CCSprite::createWithSpriteFrame((CCSpriteFrame*)sperci->objectAtIndex(0));
+
+	CCAnimation *animation=CCAnimation::createWithSpriteFrames(sperci,0.05f);
+	CCAnimate *animate=CCAnimate::create(animation);
+	CCCallFuncN *onComplete =  CCCallFuncN::create(this, callfuncN_selector(HelloWorld::runFxCallBack));  
+	CCSequence* pse=CCSequence::create(animate,onComplete,NULL);
+	monst->setAnchorPoint(getAnchorPoint());
+    point.y +=60;
+	monst->setPosition(point);
+	addChild(monst,100);
+	
+	//monst->runAction(CCRepeatForever::create(pse));
+    monst->setScale(0.5f);
+	monst->runAction(pse);
+}
+
+void HelloWorld::runFxCallBack(cocos2d::CCNode* pSend){
+    CCSprite* monst=(CCSprite*)pSend;
+	CCNode* de= monst->getParent();
+	de->removeChild(pSend,true);
+	//de->stopSpeciaCollisionMonster();
+}
+
 
 }
