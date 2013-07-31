@@ -32,6 +32,7 @@ void MainLayer::onNewGame(CCObject* pSender) {
     }
 
     CCDirector::sharedDirector()->replaceScene(scene);
+    CCLOG("MainLayer:: reference:%d",this->retainCount());
 }
 
 void MainLayer::onSettings(CCObject* pSender) {

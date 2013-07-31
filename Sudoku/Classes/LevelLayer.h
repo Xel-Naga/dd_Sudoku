@@ -16,9 +16,16 @@ public:
         memcpy(&_level,level,sizeof(int)*SUDOKU_GRID*SUDOKU_GRID);
     }
 
+    void set_level_win(int level[SUDOKU_GRID][SUDOKU_GRID]) {
+        memcpy(&_level_win,level,sizeof(int)*SUDOKU_GRID*SUDOKU_GRID);
+    }
+
+    int* get_level_win() { return (int*)_level_win;}
+
     int* get_level() { return (int*)_level; }
 
     int _level[SUDOKU_GRID][SUDOKU_GRID];
+    int _level_win[SUDOKU_GRID][SUDOKU_GRID];
 };
 
 

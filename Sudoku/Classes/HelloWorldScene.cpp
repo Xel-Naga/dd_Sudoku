@@ -341,8 +341,8 @@ bool HelloWorld::init()
 		return false;
 	}
 
-    initPhysic();
-    addPhysicSprite();
+    //initPhysic();
+    //addPhysicSprite();
 
     _inputGrid = NULL;
 
@@ -412,9 +412,9 @@ bool HelloWorld::init()
 
     CCLOG("g_pad width:%0.1f,height:%0.1f",g_pad->getContentSize().width,g_pad->getContentSize().height);
 
-    XAXA::LevelMap* level0 = XAXA::LevelMgr::instance()->get_level_map(XAXA::LevelMgr::instance()->get_curr_level());
-    XAXA::SudokuLevelMap* sudoku0 = dynamic_cast<XAXA::SudokuLevelMap*>(level0);
-    int* level = sudoku0->get_level();
+    XAXA::LevelMap* level_map = XAXA::LevelMgr::instance()->get_level_map(XAXA::LevelMgr::instance()->get_curr_level());
+    XAXA::SudokuLevelMap* sudoku = dynamic_cast<XAXA::SudokuLevelMap*>(level_map);
+    int* level = sudoku->get_level();
 	for(i=0;i<SUDOKU_GRID;i++) {
 		for(int j=0;j<SUDOKU_GRID;j++) {
 			bool isStatic = (level[i*SUDOKU_GRID+j] !=255);
@@ -439,6 +439,9 @@ void HelloWorld::menuCloseCallback(CCObject* pSender)
 
 void HelloWorld::menuGotoMainMenu(CCObject* pSender) {
     CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(1.2f, MainLayer::scene()));
+    //这里必须取消触摸代理，否则由于被引用将导致无法释放
+    CCDirector::sharedDirector()->getTouchDispatcher()->removeDelegate(this);
+
 }
 
 bool HelloWorld::canInput(CCTouch* pTouch) {
@@ -463,41 +466,18 @@ Grid* HelloWorld::getGrid(CCTouch* pTouch) {
 }
 
 bool HelloWorld::checkWin() {
-    //check every coloum
-    for(int i=0;i < SUDOKU_GRID; i++) {
-        int sum = 0;
-        for(int j=0;j < SUDOKU_GRID; j++) {
-            sum += g_GridList[i*SUDOKU_GRID+j]->getValue();
-        }
-        if(sum != VALID_SUM) {
-            return false;
-        }
-    }
-    //check every row
-    for(int i=0;i < SUDOKU_GRID; i++) {
-        int sum = 0;
-        for(int j=0;j < SUDOKU_GRID; j++) {
-            sum += g_GridList[j*SUDOKU_GRID+i]->getValue();
-        }
-        if(sum != VALID_SUM) {
-            return false;
-        }
-    }
+    XAXA::LevelMap* level_map = XAXA::LevelMgr::instance()->get_level_map(XAXA::LevelMgr::instance()->get_curr_level());
+    XAXA::SudokuLevelMap* sudoku = dynamic_cast<XAXA::SudokuLevelMap*>(level_map);
+    int* level = sudoku->get_level_win();
 
-    //check every nine grid
-    for(int i=0; i < 3; i++) {
-        for(int j = 0; j < 3;j++){
-            int sum = 0;
-            for(int k = 0; k < 3; k++) {
-                for(int p = 0; p < 3; p++) {
-                    sum += g_GridList[(i*3+k)*SUDOKU_GRID+(j*3+p)]->getValue();
-                }
-            }
-            if(sum != VALID_SUM) {
+	for(int i=0;i<SUDOKU_GRID;i++) {
+		for(int j=0;j<SUDOKU_GRID;j++) {
+			if(g_GridList[i*SUDOKU_GRID+j]->getValue() != level[i*SUDOKU_GRID+j]) {
                 return false;
             }
-        }
-    }
+		}
+	}
+
     return true;
 }
 
@@ -527,6 +507,8 @@ bool HelloWorld::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent) {
         _inputGrid->setValue(number);
         g_pad->setVisible(false);
         if(checkWin()) {
+            //此处关闭单点触摸,只能点击按钮进行下一步
+            CCDirector::sharedDirector()->getTouchDispatcher()->removeDelegate(this); 
             showWin();
         }
         return true;
