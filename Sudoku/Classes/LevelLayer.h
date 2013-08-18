@@ -2,6 +2,7 @@
 #define _LEVELLAYER_H_
 
 #include "cocos2d.h"
+#include "CCCamera.h"
 #include "cocos-ext.h"
 #include "LevelMgr.h"
 #include "Resource.h"

@@ -14,13 +14,13 @@ bool LoadingScene::prepareLoading() {
     _totalNum = 10;//好像这个统计一定要少一个才能正常结束，不知道是啥bug
 
     do {
-        CCSprite *s2=CCSprite::create("Resources/Images/Loading_dark.png");//pa2.png是较暗的图片 
+        CCSprite *s2=CCSprite::create("Images/Loading_dark.png");//pa2.png是较暗的图片 
 	    CC_BREAK_IF(!s2);
 
 	    s2->setPosition(ccp(this->getContentSize().width/2,this->getContentSize().height/2));  
 	    addChild(s2,0);
 
-	    CCSprite *s=CCSprite::create("Resources/Images/Loading_light.png");//pa1.png是较亮的图片
+	    CCSprite *s=CCSprite::create("Images/Loading_light.png");//pa1.png是较亮的图片
 	    CC_BREAK_IF(!s);
 
 	    CCProgressTimer* pt=CCProgressTimer::create(s);
@@ -104,7 +104,7 @@ cocos2d::CCScene* LoadingScene::scene()
 
 void LoadingScene::loadCallBack(CCObject* ped){
 	_loadingNum++;
-    Sleep(100);
+    //Sleep(100);
     CCProgressTimer* pt=(CCProgressTimer*)this->getChildByTag(1);
 	float now=pt->getPercentage();
     //for(int i =0; i < (int)(100.0/_totalNum); i++) {

@@ -20,9 +20,9 @@ void MainLayer::onNewGame(CCObject* pSender) {
     cocos2d::extension::CCBReader * ccbReader = new cocos2d::extension::CCBReader(ccNodeLoaderLibrary);
     
     //非常重要，这里ccb根目录设置不正确会导致图片加载失败，找不到对应的文件
-    ccbReader->setCCBRootPath("Resources/");
+    ccbReader->setCCBRootPath("");
     /* Read a ccbi file. */
-    CCNode * node = ccbReader->readNodeGraphFromFile("Resources/MainScene.ccbi", this);
+    CCNode * node = ccbReader->readNodeGraphFromFile("MainScene.ccbi", this);
     
     ccbReader->release();
 

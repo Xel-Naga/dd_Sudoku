@@ -22,25 +22,25 @@
 
 #define VALID_SUM (45)
 
-#define MUSIC_FILE "Resources/sound/sudoku.mp3"
-#define CLICK_FILE "Resources/sound/pickup_coin.wav"
+#define MUSIC_FILE "sound/sudoku.mp3"
+#define CLICK_FILE "sound/pickup_coin.wav"
 
 static const int ROW_NUM = 3;
 static const int COL_NUM = 3;
 
-static const char s_MainBkg[]               = "Resources/Images/main_bkg.png";
-static const char s_menu[]                  = "Resources/Images/menu.png";
-static const char s_MenuItem[]              = "Resources/Images/menuitemsprite.png";
-static const char s_BackGround[]            = "Resources/Images/background1.png";
-static const char s_Grid[]                  = "Resources/Images/grid_down.png";
-static const char s_GridUp[]                = "Resources/Images/grid_up.png";
-static const char s_FpsImage[]              = "Resources/fonts/fps_images.png";
-static const char s_InputPad[]              = "Resources/Images/background_input.png";
-static const char s_stars1[]                = "Resources/Images/stars.png";
-static const char s_SpinPea[]               = "Resources/Images/SpinningPeas.png";
+static const char s_MainBkg[]               = "Images/main_bkg.png";
+static const char s_menu[]                  = "Images/menu.png";
+static const char s_MenuItem[]              = "Images/menuitemsprite.png";
+static const char s_BackGround[]            = "Images/background1.png";
+static const char s_Grid[]                  = "Images/grid_down.png";
+static const char s_GridUp[]                = "Images/grid_up.png";
+static const char s_FpsImage[]              = "fonts/fps_images.png";
+static const char s_InputPad[]              = "Images/background_input.png";
+static const char s_stars1[]                = "Images/stars.png";
+static const char s_SpinPea[]               = "Images/SpinningPeas.png";
 
-static const char s_BtnCloseNormal[]   		= "Resources/Images/CloseNormal.png";
-static const char s_BtnCloseSelected[]   	= "Resources/Images/CloseSelected.png";
+static const char s_BtnCloseNormal[]   		= "Images/CloseNormal.png";
+static const char s_BtnCloseSelected[]   	= "Images/CloseSelected.png";
 
 static const char s_TestChs[]               = "测试";
 static const std::wstring s_LoadingChs               = L"加载中...";

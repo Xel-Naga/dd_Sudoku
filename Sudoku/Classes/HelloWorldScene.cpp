@@ -90,7 +90,7 @@ public:
         _value = value;
         char strValue[16]={0};
 		if(value != 255) {
-			_itoa(value,strValue,10);
+			sprintf(strValue, "%d", value);
 		}
 
         _pValueLabel->setString(strValue);
@@ -127,7 +127,7 @@ class InputPad: public CCLayer{
 public:
     CREATE_FUNC(InputPad);
 
-	InputPad::InputPad() {
+	InputPad() {
 		_pad = CCSprite::create(s_InputPad);
         this->addChild(_pad,Z_INPUTPAD);
 
@@ -399,7 +399,7 @@ bool HelloWorld::init()
 	g_gridSize = gridTexture->getContentSize();
 
     CCSpriteFrameCache* cache = CCSpriteFrameCache::sharedSpriteFrameCache();
-    cache->addSpriteFramesWithFile("Resources/Images/ccbDefaultImages.plist");
+    cache->addSpriteFramesWithFile("Images/ccbDefaultImages.plist");
 
     CCLOG("grid size width:%0.1f,height:%0.1f",g_gridSize.width,g_gridSize.height);
     CCPoint gridOrigin(ccp(O_GRID_X,O_GRID_Y));
@@ -545,8 +545,8 @@ void HelloWorld::ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent) {
 }
 
 void HelloWorld::runFx(cocos2d::CCPoint point) {
-    CCTextureCache::sharedTextureCache()->addImage("Resources/fx/light.png");
-	CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("Resources/fx/light.plist",CCTextureCache::sharedTextureCache()->textureForKey("Resources/fx/light.png"));
+    CCTextureCache::sharedTextureCache()->addImage("fx/light.png");
+	CCSpriteFrameCache::sharedSpriteFrameCache()->addSpriteFramesWithFile("fx/light.plist",CCTextureCache::sharedTextureCache()->textureForKey("fx/light.png"));
 	CCArray* sperci=CCArray::create();
 	
 	for(int i=0;i<18;i++){

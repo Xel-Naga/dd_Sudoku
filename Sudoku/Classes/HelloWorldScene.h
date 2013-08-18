@@ -4,6 +4,7 @@
 #include "cocos2d.h"
 
 USING_NS_CC;
+#undef CC_ENABLE_CHIPMUNK_INTEGRATION
 
 //namespace cocos2d {
 struct cpSpace;
@@ -53,7 +54,7 @@ private:
     cpSpace* m_pSpace; // strong ref
     cpShape* m_pWalls[4];
     CCTexture2D* m_pSpriteTexture; // weak ref
-#if CC_ENABLE_CHIPMUNK_INTEGRATION    
+#if CC_ENABLE_CHIPMUNK_INTEGRATION
     CCPhysicsDebugNode* m_pDebugLayer; // weak ref
 #endif
 };

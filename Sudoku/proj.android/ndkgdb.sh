@@ -1,5 +1,5 @@
-APPNAME="HelloCpp"
-APP_ANDROID_NAME="org.cocos2dx.hellocpp"
+APPNAME="Sudoku"
+APP_ANDROID_NAME="com.dawn2dusk.Sudoku"
 
 if [ -z "${SDK_ROOT+aaa}" ]; then
 # ... if SDK_ROOT is not set, use "$HOME/bin/android-sdk"
@@ -16,12 +16,12 @@ if [ -z "${COCOS2DX_ROOT+aaa}" ]; then
 # ... find current working directory
     DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # ... use paths relative to current directory
-    COCOS2DX_ROOT="$DIR/../../../.."
+    COCOS2DX_ROOT="$DIR/../.."
     APP_ROOT="$DIR/.."
     APP_ANDROID_ROOT="$DIR"
 else
-    APP_ROOT="$COCOS2DX_ROOT/samples/$APPNAME"
-    APP_ANDROID_ROOT="$COCOS2DX_ROOT/samples/$APPNAME/proj.android"
+    APP_ROOT="$COCOS2DX_ROOT/$APPNAME"
+    APP_ANDROID_ROOT="$COCOS2DX_ROOT/$APPNAME/proj.android"
 fi
 
 echo "NDK_ROOT = $NDK_ROOT"
