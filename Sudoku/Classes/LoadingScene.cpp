@@ -11,7 +11,7 @@ bool LoadingScene::prepareLoading() {
     bool bRet = false;
 
     _loadingNum = 0;
-    _totalNum = 10;//好像这个统计一定要少一个才能正常结束，不知道是啥bug
+    _totalNum = 11;//好像这个统计一定要少一个才能正常结束，不知道是啥bug
 
     do {
         CCSprite *s2=CCSprite::create("Images/Loading_dark.png");//pa2.png是较暗的图片 
@@ -106,14 +106,13 @@ void LoadingScene::loadCallBack(CCObject* ped){
 	_loadingNum++;
     //Sleep(100);
     CCProgressTimer* pt=(CCProgressTimer*)this->getChildByTag(1);
-	float now=pt->getPercentage();
     //for(int i =0; i < (int)(100.0/_totalNum); i++) {
     //    CCLOG("loadCallBack() progress:%d%%",i+(int)now);
     //    pt->setPercentage(i+now);
     //    Sleep(300);
     //}
-	pt->setPercentage(100.0/_totalNum+now);
-    CCLOG("loadCallBack() loading:%d/%d",_loadingNum,_totalNum);
+	pt->setPercentage(100.0*_loadingNum/_totalNum);
+    CCLOG("LoadingScene::loadCallBack() loading:%d/%d",_loadingNum,_totalNum);
 	if(_loadingNum>=_totalNum){
 		pt->setPercentage(100);
 		// 加载完的时候跳转到响应的界面

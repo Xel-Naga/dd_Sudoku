@@ -1,6 +1,8 @@
 
 #include "LevelLayer.h"
 #include "HelloWorldScene.h"
+#include "ScoreMgr.h"
+
 USING_NS_CC_EXT;
 namespace XAXA {
 

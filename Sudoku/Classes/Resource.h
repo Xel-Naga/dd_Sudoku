@@ -5,11 +5,15 @@
 #define SUDOKU_GRID (9)
 
 //各个对象的位置关系，数值大的覆盖在数值小的上面
+//先建立
 #define Z_BACKGROUND  0
-#define Z_GRID_NUMBER 1
-#define Z_INPUTPAD    10
-#define Z_INPUT_GRID_NUMBER 11
-#define Z_WIN_FIREWORK  20
+
+#define Z_HUD_LAYER 30  //用户界面层
+#define Z_GRID_NUMBER 30
+#define Z_INPUTPAD    31
+#define Z_INPUT_GRID_NUMBER 32
+#define Z_WIN_FIREWORK  33
+#define Z_TOP_LAYER 50  //最顶层
 #define Z_LOG         99
 
 //表格原点坐标

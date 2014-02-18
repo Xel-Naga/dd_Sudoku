@@ -48,7 +48,20 @@ private:
     void runFx(cocos2d::CCPoint point);
     void runFxCallBack(cocos2d::CCNode* pSend);
 
+    void timeProcess(float dt);
+    void update(float dt);
+
+    void saveScores();
+
+    void addProgress(CCPoint origin, CCSize visibleSize);
+    void addProgressBar(CCPoint origin, CCSize visibleSize);
+
+    void highLightGrid(CCTouch *pTouch);
+    void loadTexture();
 private:
+    CCLabelBMFont*    _labelProgress;
+    CCLabelBMFont*    _labelTimer0;
+    float   _timeCost0;
     Grid* _inputGrid;
     CCSprite* _background;
     cpSpace* m_pSpace; // strong ref

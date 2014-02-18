@@ -5,9 +5,10 @@
 //T* Singleton<T>::_instance = NULL;
 
 //暂时给一个游戏引擎取个名字XAXA，意思就是HAHA(哈哈)
-namespace XAXA {
 template <>
-LevelMgr* Singleton<LevelMgr>::_instance = NULL;
+XAXA::LevelMgr* BAGUA::Singleton<XAXA::LevelMgr>::_instance = NULL;
+
+namespace XAXA {
 
 //关卡编号初始化为0
 LEVEL_SN_TYPE LevelMgr::_next_level_sn = 0;

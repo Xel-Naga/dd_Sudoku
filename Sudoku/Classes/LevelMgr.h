@@ -5,31 +5,10 @@
 #include <list>
 #include <map>
 
+#include "singleton.h"
+
 //暂时给一个游戏引擎取个名字XAXA，意思就是HAHA(哈哈)
 namespace XAXA {
-
-template <class T>
-class Singleton {
-public:
-    static T* instance() {
-        if(!_instance) {
-            _instance = new T();
-
-        }
-
-        return _instance;
-    }
-
-    static void release() {
-        if(_instance) {
-            delete _instance;
-        }
-    }
-
-private:
-    static T* _instance;
-};
-
 
 //关卡的地图信息基类
 class LevelMap {
@@ -52,7 +31,7 @@ public:
 
 //关卡管理器，包括关卡信息，关卡地图信息，
 //如果是网络游戏，则包括了用户信息，至少需要与某个用户ID关联，暂时可以不考虑，给个接口就行了
-class LevelMgr: public Singleton<LevelMgr> {
+class LevelMgr: public BAGUA::Singleton<LevelMgr> {
 public:
     void add_level(LevelMap* level);
     LevelInfo* get_level_info(LEVEL_SN_TYPE level_sn);
