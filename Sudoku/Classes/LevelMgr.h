@@ -5,6 +5,9 @@
 #include <list>
 #include <map>
 
+//暂时给一个游戏引擎取个名字XAXA，意思就是HAHA(哈哈)
+namespace XAXA {
+
 template <class T>
 class Singleton {
 public:
@@ -27,8 +30,7 @@ private:
     static T* _instance;
 };
 
-//暂时给一个游戏引擎取个名字XAXA，意思就是HAHA(哈哈)
-namespace XAXA {
+
 //关卡的地图信息基类
 class LevelMap {
 public:
