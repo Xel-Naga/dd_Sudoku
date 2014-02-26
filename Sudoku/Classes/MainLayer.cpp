@@ -2,6 +2,8 @@
 #include "MainLayer.h"
 #include "Resource.h"
 
+#include "WapsAd.h"
+
 #include "LevelLayerLoader.h"
 USING_NS_CC_EXT;
 
@@ -36,7 +38,7 @@ void MainLayer::onNewGame(CCObject* pSender) {
 }
 
 void MainLayer::onSettings(CCObject* pSender) {
-    onNewGame(pSender);
+    WapsAd::showAd(0);
 }
 
 void MainLayer::onAbout(CCObject* pSender) {

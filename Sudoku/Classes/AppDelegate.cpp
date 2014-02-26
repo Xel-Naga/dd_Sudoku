@@ -3,6 +3,9 @@
 #include <vector>
 #include <string>
 
+#include "SimpleAudioEngine.h"
+using namespace CocosDenshion;
+
 #include "LoadingScene.h"
 #include "AppMacros.h"
 
@@ -33,6 +36,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     int x,y;
     resAdapter.exec(x,y,searchPath);
 
+    CCLOG("frame size: %f,%f design size: %d,%d", frameSize.width, frameSize.height, x, y);
     pEGLView->setDesignResolutionSize(x,y,kResolutionShowAll);
 
     // set searching path
@@ -58,7 +62,7 @@ void AppDelegate::applicationDidEnterBackground() {
     CCDirector::sharedDirector()->stopAnimation();
 
     // if you use SimpleAudioEngine, it must be pause
-    // SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
+    SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
 }
 
 // this function will be called when the app is active again
@@ -66,5 +70,5 @@ void AppDelegate::applicationWillEnterForeground() {
     CCDirector::sharedDirector()->startAnimation();
 
     // if you use SimpleAudioEngine, it must resume here
-    // SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
+    SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
 }

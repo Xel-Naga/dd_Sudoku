@@ -115,6 +115,7 @@ ResolutionAdaptor::ResolutionAdaptor(int f_width, int f_height) :
 }
 
 void ResolutionAdaptor::getResolution(int& d_width,int& d_height) {
+/*    
     std::vector<Resolution> res_list;
 
     for(auto res:res_list) {
@@ -135,7 +136,7 @@ void ResolutionAdaptor::getResolution(int& d_width,int& d_height) {
     }
 
     //3. 缩放比例超过门限，看长宽的比例
-    
+*/  
 }
 
 void ResolutionAdaptor::getSearchPath(std::vector<std::string>& searchPath) {
@@ -149,7 +150,7 @@ int ResolutionAdaptor::getResolutionPolicy() {
 }
 
 void getDesignResolutionFromJson(int& width, int& height) {
-
+  
     std::ifstream ifs;
     ifs.open("design_resolution.json");
     assert(ifs.is_open());
@@ -167,6 +168,7 @@ void getDesignResolutionFromJson(int& width, int& height) {
         width = root[i]["width"].asInt();
         height = root[i]["height"].asInt();
     }  
+
 }
 
 //倾向于使用kResolutionShowAll，虽然可能有黑边，但是内容能够显示完整
@@ -175,14 +177,15 @@ void getDesignResolutionFromJson(int& width, int& height) {
 //那么就不能直接使用图片中的坐标，必须乘上缩放因子
 //建议图片分辨率和设计分辨率相同，不设置缩放因子，这样开发起来比较方便
 //所以这里的策略就是根据输入的屏幕分辨率找到最接近的资源分辨率，并将之作为设计分辨率
+//需要关注androidManifest.xml中关于横竖屏的设置，screenOrientation="portrait"
 void ResolutionAdaptor::exec(int& d_width,int& d_height,std::vector<std::string>& searchPath) {
     getDesignResolutionFromJson(d_width,d_height);
-    getResolution(d_width,d_height);
-    getSearchPath(searchPath);
-    getResolutionPolicy();
+    //getResolution(d_width,d_height);
+    //getSearchPath(searchPath);
+    //getResolutionPolicy();
 
-    //d_width = 320;
-    //d_height = 480;
+    d_width = 320;
+    d_height = 480;
 }
 
 }

@@ -11,7 +11,7 @@ bool LoadingScene::prepareLoading() {
     bool bRet = false;
 
     _loadingNum = 0;
-    _totalNum = 11;//好像这个统计一定要少一个才能正常结束，不知道是啥bug
+    _totalNum = 10;//好像这个统计一定要少一个才能正常结束，不知道是啥bug
 
     do {
         CCSprite *s2=CCSprite::create("Images/Loading_dark.png");//pa2.png是较暗的图片 
@@ -61,8 +61,6 @@ bool LoadingScene::init()
         //开始加载图片
         CCTextureCache::sharedTextureCache()->addImageAsync(s_MainBkg,this,callfuncO_selector(LoadingScene::loadCallBack)); 
         CCTextureCache::sharedTextureCache()->addImageAsync(s_menu,this,callfuncO_selector(LoadingScene::loadCallBack)); 
-
-        CCTextureCache::sharedTextureCache()->addImageAsync(s_MenuItem,this,callfuncO_selector(LoadingScene::loadCallBack)); 
 
         CCTextureCache::sharedTextureCache()->addImageAsync(s_BackGround,this,callfuncO_selector(LoadingScene::loadCallBack)); 
  

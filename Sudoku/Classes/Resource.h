@@ -34,7 +34,6 @@ static const int COL_NUM = 3;
 
 static const char s_MainBkg[]               = "Images/main_bkg.png";
 static const char s_menu[]                  = "Images/menu.png";
-static const char s_MenuItem[]              = "Images/menuitemsprite.png";
 static const char s_BackGround[]            = "Images/background1.png";
 static const char s_Grid[]                  = "Images/grid_down.png";
 static const char s_GridUp[]                = "Images/grid_up.png";
@@ -47,7 +46,7 @@ static const char s_BtnCloseNormal[]   		= "Images/CloseNormal.png";
 static const char s_BtnCloseSelected[]   	= "Images/CloseSelected.png";
 
 static const char s_TestChs[]               = "测试";
-static const std::wstring s_LoadingChs               = L"加载中...";
+static const std::wstring s_LoadingChs               = L"测试一下加载界面...";
 
 
 

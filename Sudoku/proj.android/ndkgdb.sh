@@ -1,5 +1,5 @@
-APPNAME="Sudoku"
-APP_ANDROID_NAME="com.dawn2dusk.Sudoku"
+APPNAME="sudoku"
+APP_ANDROID_NAME="com.test.sudoku"
 
 if [ -z "${SDK_ROOT+aaa}" ]; then
 # ... if SDK_ROOT is not set, use "$HOME/bin/android-sdk"
