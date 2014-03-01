@@ -6,6 +6,7 @@
 #include "cocos-ext.h"
 #include "LevelMgr.h"
 #include "Resource.h"
+#include "Utils.h"
 
 USING_NS_CC;
 //暂时给一个游戏引擎取个名字XAXA，意思就是HAHA(哈哈)
@@ -48,20 +49,12 @@ public:
     virtual bool onAssignCCBMemberVariable(cocos2d::CCObject * pTarget, const char * pMemberVariableName, cocos2d::CCNode * pNode);
     virtual void onNodeLoaded(CCNode * pNode, cocos2d::extension::CCNodeLoader * pNodeLoader);
 
-
-    void onPressLevelBtn1(cocos2d::CCObject * pSender, cocos2d::extension::CCControlEvent pCCControlEvent);
-    void onPressLevelBtn2(cocos2d::CCObject * pSender, cocos2d::extension::CCControlEvent pCCControlEvent);
-    void onPressLevelBtn3(cocos2d::CCObject * pSender, cocos2d::extension::CCControlEvent pCCControlEvent);
-    void onPressLevelBtn4(cocos2d::CCObject * pSender, cocos2d::extension::CCControlEvent pCCControlEvent);
+    void onPressLevelBtn(cocos2d::CCObject * pSender, cocos2d::extension::CCControlEvent pCCControlEvent);
 
     void goToLevel(LEVEL_SN_TYPE sn);
-private:
-    cocos2d::extension::CCControlButton * mBtnLvl1;
-    cocos2d::extension::CCControlButton * mBtnLvl2;
-    cocos2d::extension::CCControlButton * mBtnLvl3;
-    cocos2d::extension::CCControlButton * mBtnLvl4;
 };
 
+CREATE_AUTORELEASE_LOADER(LevelLayer);
 
 }//end namespace XAXA
 

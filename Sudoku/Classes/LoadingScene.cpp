@@ -120,8 +120,7 @@ void LoadingScene::loadCallBack(CCObject* ped){
 }
 
 void LoadingScene::goWelcomeScene() {
-    CCScene* se=MainLayer::scene();
-	CCDirector::sharedDirector()->replaceScene(CCTransitionMoveInR::create(1,se));
+    REPLACE_SCENE_FROM_CCBI(MainLayer);
 }
 
 

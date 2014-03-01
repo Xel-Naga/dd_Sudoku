@@ -1,10 +1,11 @@
 #include "LevelMgr.h"
 #include "MainLayer.h"
 #include "Resource.h"
+#include "ScoreMgr.h"
 
 #include "WapsAd.h"
 
-#include "LevelLayerLoader.h"
+#include "LevelLayer.h"
 USING_NS_CC_EXT;
 
 #include "SimpleAudioEngine.h"
@@ -12,41 +13,76 @@ using namespace CocosDenshion;
 
 namespace XAXA {
 
-void MainLayer::onNewGame(CCObject* pSender) {
-    /* Create an autorelease CCNodeLoaderLibrary. */
-    CCNodeLoaderLibrary * ccNodeLoaderLibrary = CCNodeLoaderLibrary::newDefaultCCNodeLoaderLibrary();
-    
-    ccNodeLoaderLibrary->registerCCNodeLoader("LevelLayer", LevelLayerLoader::loader());
-
-    /* Create an autorelease CCBReader. */
-    cocos2d::extension::CCBReader * ccbReader = new cocos2d::extension::CCBReader(ccNodeLoaderLibrary);
-    
-    //非常重要，这里ccb根目录设置不正确会导致图片加载失败，找不到对应的文件
-    ccbReader->setCCBRootPath("");
-    /* Read a ccbi file. */
-    CCNode * node = ccbReader->readNodeGraphFromFile("MainScene.ccbi", this);
-    
-    ccbReader->release();
-
-    CCScene * scene = CCScene::create();
-    if(node != NULL) {
-        scene->addChild(node);
-    }
-
-    CCDirector::sharedDirector()->replaceScene(scene);
-    CCLOG("MainLayer:: reference:%d",this->retainCount());
+void MainLayer::onNodeLoaded(CCNode * pNode, CCNodeLoader * pNodeLoader) {
+    init();
 }
 
-void MainLayer::onSettings(CCObject* pSender) {
+SEL_CCControlHandler MainLayer::onResolveCCBCCControlSelector(CCObject * pTarget, const char * pSelectorName) {
+    CCB_SELECTORRESOLVER_CCCONTROL_GLUE(this, "onPressPlay",MainLayer::onPressPlay);
+    CCB_SELECTORRESOLVER_CCCONTROL_GLUE(this, "onPressExit", MainLayer::onPressExit);
+    CCB_SELECTORRESOLVER_CCCONTROL_GLUE(this, "onPressMore", MainLayer::onPressMore);
+    CCB_SELECTORRESOLVER_CCCONTROL_GLUE(this, "onPressSpeaker", MainLayer::onPressSpeaker);
+
+    return NULL;
+}
+
+bool MainLayer::onAssignCCBMemberVariable(CCObject * pTarget, const char * pMemberVariableName, CCNode * pNode) {
+    //CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "btnLvl1", CCControlButton *, this->mBtnLvl1);
+   // CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "btnLvl2", CCControlButton *, this->mBtnLvl2);
+  //  CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "btnLvl3", CCControlButton *, this->mBtnLvl3);
+   // CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "btnLvl4", CCControlButton *, this->mBtnLvl4);
+
+    return false;
+}
+
+SEL_MenuHandler MainLayer::onResolveCCBCCMenuItemSelector(CCObject * pTarget, const char * pSelectorName) {
+    return NULL;
+}
+
+void MainLayer::onPressPlay(cocos2d::CCObject * pSender, cocos2d::extension::CCControlEvent pCCControlEvent) {
+    REPLACE_SCENE_FROM_CCBI(LevelLayer);
+}
+
+void MainLayer::onPressMore(cocos2d::CCObject * pSender, cocos2d::extension::CCControlEvent pCCControlEvent) {
     WapsAd::showAd(0);
 }
 
-void MainLayer::onAbout(CCObject* pSender) {
+void MainLayer::onPressExit(cocos2d::CCObject * pSender, cocos2d::extension::CCControlEvent pCCControlEvent) {
 	CCDirector::sharedDirector()->end();
+}
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-	exit(0);
-#endif
+void MainLayer::saveSpeakerState(bool isOn) {
+    if(isOn) {
+        ScoreMgr::instance()->saveInt("speaker_state",1);
+    }
+    else {
+        ScoreMgr::instance()->saveInt("speaker_state",0);
+    }
+}
+
+bool MainLayer::getSpeakerState() {
+    return ScoreMgr::instance()->loadInt("speaker_state");
+}
+
+void MainLayer::onPressSpeaker(cocos2d::CCObject * pSender, cocos2d::extension::CCControlEvent pCCControlEvent) {
+    static bool is_music_pauseing = false;
+
+    if(!SimpleAudioEngine::sharedEngine()->isBackgroundMusicPlaying()) {
+        SimpleAudioEngine::sharedEngine()->playBackgroundMusic(MUSIC_FILE, true);
+        saveSpeakerState(true);
+        is_music_pauseing = false;
+    }
+    else if(!is_music_pauseing)
+    {
+        SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
+        saveSpeakerState(false);
+        is_music_pauseing = true;
+    }
+    else {
+        SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
+        saveSpeakerState(true);
+        is_music_pauseing = false;
+    }
 }
 
 void MainLayer::initSound() {
@@ -58,10 +94,10 @@ void MainLayer::initSound() {
     // set default volume
     SimpleAudioEngine::sharedEngine()->setEffectsVolume(0.5f);
     SimpleAudioEngine::sharedEngine()->setBackgroundMusicVolume(0.3f);
-    if(!SimpleAudioEngine::sharedEngine()->isBackgroundMusicPlaying()) {
+
+    if(getSpeakerState() && !SimpleAudioEngine::sharedEngine()->isBackgroundMusicPlaying()) {
         SimpleAudioEngine::sharedEngine()->playBackgroundMusic(MUSIC_FILE, true);
     }
-
 }
 
 void MainLayer::initLevel() {
@@ -78,41 +114,6 @@ bool MainLayer::init() {
 
     initLevel();
 
-    CCSize visibleSize = CCDirector::sharedDirector()->getVisibleSize();
-	CCPoint origin = CCDirector::sharedDirector()->getVisibleOrigin();
-
-    //CCTexture2D* pTexture = CCTexture2D::init();
-    
-    CCSprite* newGameNormal = CCSprite::create(s_menu, CCRect(0, 0, 126, 33));
-    CCSprite* newGameSelected = CCSprite::create(s_menu, CCRect(0, 33, 126, 33));
-    CCSprite* newGameDisabled = CCSprite::create(s_menu, CCRect(0, 33 * 2, 126, 33));
-    
-    CCSprite* gameSettingsNormal = CCSprite::create(s_menu, CCRect(126, 0, 126, 33));
-    CCSprite* gameSettingsSelected = CCSprite::create(s_menu, CCRect(126, 33, 126, 33));
-    CCSprite* gameSettingsDisabled = CCSprite::create(s_menu, CCRect(126, 33 * 2, 126, 33));
-
-    CCSprite* aboutNormal = CCSprite::create(s_menu, CCRect(252, 0, 126, 33));
-    CCSprite* aboutSelected = CCSprite::create(s_menu, CCRect(252, 33, 126, 33));
-    CCSprite* aboutDisabled = CCSprite::create(s_menu, CCRect(252, 33 * 2, 126, 33));
-
-    CCMenuItemSprite* newGame = CCMenuItemSprite::create(newGameNormal, newGameSelected, newGameDisabled, this, menu_selector(MainLayer::onNewGame));
-    CCMenuItemSprite* gameSettings = CCMenuItemSprite::create(gameSettingsNormal, gameSettingsSelected, gameSettingsDisabled, this,menu_selector(MainLayer::onSettings));
-    CCMenuItemSprite* about = CCMenuItemSprite::create(aboutNormal, aboutSelected, aboutDisabled, this, menu_selector(MainLayer::onAbout));
-
-    //非常重要，菜单最后一个对象必须是NULL
-    CCMenu* menu = CCMenu::create(newGame, gameSettings, about,NULL);
-
-    menu->alignItemsVerticallyWithPadding(10);
-
-    CCSize s = CCDirector::sharedDirector()->getWinSize();
-    menu->setPosition(ccp(s.width/2, s.height/2));
-
-    this->addChild(menu, 1);
-
-    //默认添加进来是sprite的中心位置在坐标原点
-    CCSprite* mainBkg = CCSprite::create(s_MainBkg);
-    mainBkg->setPosition(ccp(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
-    this->addChild(mainBkg);
     return true;
 }
 

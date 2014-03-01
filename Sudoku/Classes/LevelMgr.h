@@ -39,6 +39,7 @@ public:
     static LEVEL_SN_TYPE alloc_level_sn() { return _next_level_sn++;}
     LEVEL_SN_TYPE get_curr_level();
     void set_curr_level(LEVEL_SN_TYPE sn);
+    int get_level_count() { return _next_level_sn;}
 
 private:
     LEVEL_SN_TYPE _curr_level_sn;//µ±Ç°¹Ø¿¨±àºÅ

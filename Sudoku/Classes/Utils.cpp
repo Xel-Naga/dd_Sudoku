@@ -153,3 +153,21 @@ float getBound(float x,float offset,float min,float max) {
 
     return x;
 }
+
+
+CCControlButton * createButtonWithTitle(const char * title, const char* bg, const char* bg_hi,ccColor3B color, int fontSize)
+{
+    /** Creates and return a button with a default background and title color. */
+    CCScale9Sprite *backgroundButton = CCScale9Sprite::create(bg);
+    CCScale9Sprite *backgroundHighlightedButton = CCScale9Sprite::create(bg_hi);
+    
+    CCLabelBMFont *titleButton = CCLabelBMFont::create(title, "fonts/futura-48.fnt");
+    titleButton->setScale((float)fontSize/48);
+    //titleButton->setColor(color);
+    
+    CCControlButton *button = CCControlButton::create(titleButton, backgroundButton);
+    button->setBackgroundSpriteForState(backgroundHighlightedButton, CCControlStateHighlighted);
+    button->setTitleColorForState(ccWHITE, CCControlStateHighlighted);
+    
+    return button;
+}

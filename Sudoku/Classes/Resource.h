@@ -7,7 +7,7 @@
 //各个对象的位置关系，数值大的覆盖在数值小的上面
 //先建立
 #define Z_BACKGROUND  0
-
+#define Z_GAME_LAYER 10 //游戏画面层
 #define Z_HUD_LAYER 30  //用户界面层
 #define Z_GRID_NUMBER 30
 #define Z_INPUTPAD    31
@@ -44,6 +44,8 @@ static const char s_SpinPea[]               = "Images/SpinningPeas.png";
 
 static const char s_BtnCloseNormal[]   		= "Images/CloseNormal.png";
 static const char s_BtnCloseSelected[]   	= "Images/CloseSelected.png";
+
+static const char s_BtnLevelNormal[]   	= "Images/star_0.png";
 
 static const char s_TestChs[]               = "测试";
 static const std::wstring s_LoadingChs               = L"测试一下加载界面...";

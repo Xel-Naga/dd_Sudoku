@@ -116,6 +116,17 @@ void add_level4() {
     add_level(level,level_win);
 }
 
+class LevelBtn: public CCNode {
+    LevelBtn() {
+        btnLevel = createButtonWithTitle("1",s_BtnLevelNormal,s_BtnLevelNormal,ccc3(0,0,255),20);
+        addChild(btnLevel,Z_GAME_LAYER);
+        btnLevel->setPosition(160,160);
+        btnLevel->setPreferredSize(CCSize(128,128));
+        btnLevel->addTargetWithActionForControlEvents(this, cccontrol_selector(LevelLayer::onPressLevelBtn), CCControlEventTouchUpInside);  
+    }
+    CCControlButton * btnLevel;
+};
+
 //非常重要，CCB中的自定义类不会再调用其init函数，需要在onNodeLoaded中手工调用一下
 bool LevelLayer::init() {
     add_level1();
@@ -125,6 +136,20 @@ bool LevelLayer::init() {
     add_level3();
     add_level4();
 
+    char buff[8];
+    for(int i = 0; i < LevelMgr::instance()->get_level_count(); i++) {
+        sprintf(buff,"%d",i);
+        CCControlButton * lv1 = createButtonWithTitle(buff,s_BtnLevelNormal,s_BtnLevelNormal,ccc3(0,0,255),20);
+        addChild(lv1,Z_GAME_LAYER,i);
+        lv1->setPreferredSize(CCSize(128,128));
+        lv1->setScale(0.7f);
+        float width = 128*0.7f;
+        float x = 10+width*0.5f+(width*0.7f)*(i%3);
+        float y = (360 - (width*0.7f)*(i/3));
+        lv1->setPosition(x,y);
+        CCLOG("level position:%0.1f,%0.1f",x,y);
+        lv1->addTargetWithActionForControlEvents(this, cccontrol_selector(LevelLayer::onPressLevelBtn), CCControlEventTouchUpInside);  
+    }
     return true;
 }
 
@@ -138,19 +163,11 @@ SEL_MenuHandler LevelLayer::onResolveCCBCCMenuItemSelector(CCObject * pTarget, c
 }
 
 SEL_CCControlHandler LevelLayer::onResolveCCBCCControlSelector(CCObject * pTarget, const char * pSelectorName) {
-    CCB_SELECTORRESOLVER_CCCONTROL_GLUE(this, "onPressLevelBtn1", LevelLayer::onPressLevelBtn1);
-    CCB_SELECTORRESOLVER_CCCONTROL_GLUE(this, "onPressLevelBtn2", LevelLayer::onPressLevelBtn2);
-    CCB_SELECTORRESOLVER_CCCONTROL_GLUE(this, "onPressLevelBtn3", LevelLayer::onPressLevelBtn3);
-    CCB_SELECTORRESOLVER_CCCONTROL_GLUE(this, "onPressLevelBtn4", LevelLayer::onPressLevelBtn4);
 
     return NULL;
 }
 
 bool LevelLayer::onAssignCCBMemberVariable(CCObject * pTarget, const char * pMemberVariableName, CCNode * pNode) {
-    //CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "btnLvl1", CCControlButton *, this->mBtnLvl1);
-   // CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "btnLvl2", CCControlButton *, this->mBtnLvl2);
-  //  CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "btnLvl3", CCControlButton *, this->mBtnLvl3);
-   // CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "btnLvl4", CCControlButton *, this->mBtnLvl4);
 
     return false;
 }
@@ -162,68 +179,9 @@ void LevelLayer::goToLevel(LEVEL_SN_TYPE sn) {
     //se->autorelease();
 }
 
-void LevelLayer::onPressLevelBtn1(cocos2d::CCObject *pSender, cocos2d::extension::CCControlEvent pCCControlEvent) {
-    switch(pCCControlEvent) {
-        case CCControlEventTouchDown:
-            break;
-        case CCControlEventTouchDragInside:
-            
-            break;
-        case CCControlEventTouchDragOutside:
-            
-            break;
-        case CCControlEventTouchDragEnter:
-           
-            break;
-        case CCControlEventTouchDragExit:
-            
-            break;
-        case CCControlEventTouchUpInside:
-            goToLevel(0);
-            break;
-        case CCControlEventTouchUpOutside:
-            
-            break;
-        case CCControlEventTouchCancel:
-            
-            break;
-        case CCControlEventValueChanged:
-            
-            break;
-        default:
-            assert(false); // OH SHIT!
-    }
+void LevelLayer::onPressLevelBtn(cocos2d::CCObject *pSender, cocos2d::extension::CCControlEvent pCCControlEvent) {
+    CCControlButton* btn = (CCControlButton*)pSender;
+    goToLevel(btn->getTag());
 }
-
-void LevelLayer::onPressLevelBtn2(cocos2d::CCObject *pSender, cocos2d::extension::CCControlEvent pCCControlEvent) {
-    switch(pCCControlEvent) {
-        case CCControlEventTouchUpInside:
-            goToLevel(1);            
-            break;
-        default:
-            assert(false); // OH SHIT!
-    }
-}
-
-void LevelLayer::onPressLevelBtn3(cocos2d::CCObject *pSender, cocos2d::extension::CCControlEvent pCCControlEvent) {
-    switch(pCCControlEvent) {
-        case CCControlEventTouchUpInside:
-            goToLevel(2); 
-            break;
-        default:
-            assert(false); // OH SHIT!
-    }
-}
-
-void LevelLayer::onPressLevelBtn4(cocos2d::CCObject *pSender, cocos2d::extension::CCControlEvent pCCControlEvent) {
-    switch(pCCControlEvent) {
-        case CCControlEventTouchUpInside:
-            goToLevel(3); 
-            break;
-        default:
-            assert(false); // OH SHIT!
-    }
-}
-
 
 }//end namespace XAXA
