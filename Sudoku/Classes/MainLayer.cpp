@@ -27,11 +27,6 @@ SEL_CCControlHandler MainLayer::onResolveCCBCCControlSelector(CCObject * pTarget
 }
 
 bool MainLayer::onAssignCCBMemberVariable(CCObject * pTarget, const char * pMemberVariableName, CCNode * pNode) {
-    //CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "btnLvl1", CCControlButton *, this->mBtnLvl1);
-   // CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "btnLvl2", CCControlButton *, this->mBtnLvl2);
-  //  CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "btnLvl3", CCControlButton *, this->mBtnLvl3);
-   // CCB_MEMBERVARIABLEASSIGNER_GLUE(this, "btnLvl4", CCControlButton *, this->mBtnLvl4);
-
     return false;
 }
 

@@ -23,12 +23,12 @@ void ScoreMgr::saveString(const char* key, const std::string& value, bool needFl
     }
 }
 
-int ScoreMgr::loadInt(const char* key) {
-    return CCUserDefault::sharedUserDefault()->getIntegerForKey(key);
+int ScoreMgr::loadInt(const char* key,int defaultValue) {
+    return CCUserDefault::sharedUserDefault()->getIntegerForKey(key,defaultValue);
 }
 
-std::string ScoreMgr::loadString(const char* key) {
-    return CCUserDefault::sharedUserDefault()->getStringForKey(key);
+std::string ScoreMgr::loadString(const char* key,const std::string& defaultValue) {
+    return CCUserDefault::sharedUserDefault()->getStringForKey(key,defaultValue);
 }
 
 void ScoreMgr::flush() {

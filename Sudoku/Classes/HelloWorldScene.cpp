@@ -245,126 +245,6 @@ void HelloWorld::didAccelerate(CCAcceleration* pAccelerationValue)
 	m_pSpace->gravity = cpv(v.x, v.y);
 }
 
-
-void HelloWorld::initPhysic() {
-#if CC_ENABLE_CHIPMUNK_INTEGRATION
-
-	//启动重力加速度，系统会定时调用didAccelerate
-	setAccelerometerEnabled(true);
-
-	m_pSpace = cpSpaceNew();
-
-	m_pSpace->gravity = cpv(0, -100);
-
-	//
-	// rogue shapes
-	// We have to free them manually
-	//
-	// bottom
-	m_pWalls[0] = cpSegmentShapeNew( m_pSpace->staticBody,
-		cpv(VisibleRect::leftBottom().x,VisibleRect::leftBottom().y),
-		cpv(VisibleRect::rightBottom().x, VisibleRect::rightBottom().y), 0.0f);
-
-	// top
-	m_pWalls[1] = cpSegmentShapeNew( m_pSpace->staticBody, 
-		cpv(VisibleRect::leftTop().x, VisibleRect::leftTop().y),
-		cpv(VisibleRect::rightTop().x, VisibleRect::rightTop().y), 0.0f);
-
-	// left
-	m_pWalls[2] = cpSegmentShapeNew( m_pSpace->staticBody,
-		cpv(VisibleRect::leftBottom().x,VisibleRect::leftBottom().y),
-		cpv(VisibleRect::leftTop().x,VisibleRect::leftTop().y), 0.0f);
-
-	// right
-	m_pWalls[3] = cpSegmentShapeNew( m_pSpace->staticBody, 
-		cpv(VisibleRect::rightBottom().x, VisibleRect::rightBottom().y),
-		cpv(VisibleRect::rightTop().x, VisibleRect::rightTop().y), 0.0f);
-
-	for( int i=0;i<4;i++) {
-		m_pWalls[i]->e = 1.0f;
-		m_pWalls[i]->u = 1.0f;
-		cpSpaceAddStaticShape(m_pSpace, m_pWalls[i] );
-	}
-
-	// Physics debug layer
-	m_pDebugLayer = CCPhysicsDebugNode::create(m_pSpace);
-	this->addChild(m_pDebugLayer, Z_PHYSICS_DEBUG);
-#endif
-}
-
-void HelloWorld::addPhysicSprite() {
-#if CC_ENABLE_CHIPMUNK_INTEGRATION
-	// Use batch node. Faster
-	CCSpriteBatchNode *parent = CCSpriteBatchNode::create(s_SpinPea, 100);
-	m_pSpriteTexture = parent->getTexture();
-
-	addChild(parent, 100, kTagParentNode);
-
-	CCPoint pos = ccp(200,200);
-	int posx, posy;
-
-	CCNode *parent = getChildByTag(kTagParentNode);
-
-	posx = CCRANDOM_0_1() * 200.0f;
-	posy = CCRANDOM_0_1() * 200.0f;
-
-	posx = (posx % 4) * 85;
-	posy = (posy % 3) * 121;
-
-
-	int num = 4;
-	cpVect verts[] = {
-		cpv(-24,-54),
-		cpv(-24, 54),
-		cpv( 24, 54),
-		cpv( 24,-54),
-	};
-
-	cpBody *body = cpBodyNew(1.0f, cpMomentForPoly(1.0f, num, verts, cpvzero));
-
-	body->p = cpv(pos.x, pos.y);
-	cpSpaceAddBody(m_pSpace, body);
-
-	cpShape* shape = cpPolyShapeNew(body, num, verts, cpvzero);
-	shape->e = 0.5f; shape->u = 0.5f;
-	cpSpaceAddShape(m_pSpace, shape);
-
-	CCPhysicsSprite *sprite = CCPhysicsSprite::createWithTexture(m_pSpriteTexture, CCRectMake(posx, posy, 85, 121));
-	parent->addChild(sprite,50);
-
-	sprite->setCPBody(body);
-	sprite->setPosition(pos);
-#endif
-}
-
-/*
-void init9sprite() {
-	int space = 10; // px
-		
-	double max_w = 0, max_h = 0;
-	for (int i = 0; i < 3; i++)
-	{
-		for (int j = 0; j < 3; j++)
-		{
-			// Add the buttons
-			CCControlButton *button = standardButtonWithTitle(CCString::createWithFormat("%d",rand() % 30)->getCString());
-			button->setAdjustBackgroundImage(false);  // Tells the button that the background image must not be adjust
-												// It'll use the prefered size of the background image
-			button->setPosition(ccp (button->getContentSize().width / 2 + (button->getContentSize().width + space) * i,
-									button->getContentSize().height / 2 + (button->getContentSize().height + space) * j));
-			layer->addChild(button);
-				
-			max_w = MAX(button->getContentSize().width * (i + 1) + space  * i, max_w);
-			max_h = MAX(button->getContentSize().height * (j + 1) + space * j, max_h);
-		}
-	}
-	CCScale9Sprite *backgroundButton = CCScale9Sprite::create("extensions/buttonBackground.png");
-	backgroundButton->setContentSize(CCSizeMake(max_w + 14, max_h + 14));
-	backgroundButton->setPosition(ccp(screenSize.width / 2.0f, screenSize.height / 2.0f));
-	addChild(backgroundButton);
-}
-*/
-
 void HelloWorld::addProgressBar(CCPoint o, CCSize vs) {
     do {
         
@@ -415,7 +295,7 @@ void HelloWorld::addProgress(CCPoint origin, CCSize visibleSize) {
     CCSize sizeTimer = _labelProgress->getContentSize();
 
     //添加进度条
-    addProgressBar(origin, visibleSize);
+    //addProgressBar(origin, visibleSize);
 
     _labelTimer0->setPosition(ccp(origin.x+sizeTime.width+sizeTimer.width/2+5, origin.y+visibleSize.height - sizeTime.height/2));
     addChild(_labelTimer0,Z_TOP_LAYER);
@@ -446,9 +326,6 @@ bool HelloWorld::init()
 	{
 		return false;
 	}
-
-    //initPhysic();
-	//addPhysicSprite();
 
 	_inputGrid = NULL;
 
@@ -549,7 +426,9 @@ void HelloWorld::timeProcess(float dt) {
     _labelTimer0->setString( str ); 
 
     CCProgressTimer* pt=(CCProgressTimer*)getChildByTag(kTagProgresBar);
-    pt->setPercentage(100.0*_timeCost0/10);
+    if(pt) {
+        pt->setPercentage(100.0*_timeCost0/10);
+    }
 }
 
 //调用ScheduleUpdate后，每帧都会调用此函数，基本等于60fps
@@ -570,9 +449,12 @@ void HelloWorld::menuCloseCallback(CCObject* pSender)
 
 void HelloWorld::saveScores() {
     //我们这里简单存储条数据
+    char buff[32];
     LEVEL_SN_TYPE level = XAXA::LevelMgr::instance()->get_curr_level();
-    ScoreMgr::instance()->saveInt("level", (int)level);
-    ScoreMgr::instance()->saveInt("timeCost",(int)_timeCost0);
+    sprintf(buff,"level_%d_lock",(int)level);
+    ScoreMgr::instance()->saveInt(buff, (int)0);
+    sprintf(buff,"level_%d_timecost",(int)level);
+    ScoreMgr::instance()->saveInt(buff,(int)_timeCost0);
     
     //取出我们刚存储的然后赋值给str验证下；
     int testReadLevel= ScoreMgr::instance()->loadInt("level");
@@ -583,7 +465,7 @@ void HelloWorld::saveScores() {
 
 void HelloWorld::menuGotoMainMenu(CCObject* pSender) {
     saveScores();
-	CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(1.2f, MainLayer::scene()));
+    REPLACE_SCENE_FROM_CCBI(MainLayer);
 	//这里必须取消触摸代理，否则由于被引用将导致无法释放
 	CCDirector::sharedDirector()->getTouchDispatcher()->removeDelegate(this);
 

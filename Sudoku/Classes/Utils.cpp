@@ -155,7 +155,7 @@ float getBound(float x,float offset,float min,float max) {
 }
 
 
-CCControlButton * createButtonWithTitle(const char * title, const char* bg, const char* bg_hi,ccColor3B color, int fontSize)
+CCControlButton * createButtonWithTitle(const char * title, const char* bg, const char* bg_hi,ccColor3B color, float fontSize)
 {
     /** Creates and return a button with a default background and title color. */
     CCScale9Sprite *backgroundButton = CCScale9Sprite::create(bg);

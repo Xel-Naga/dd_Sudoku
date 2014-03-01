@@ -42,9 +42,6 @@ private:
     bool checkWin();
     void showWin();
 
-    void initPhysic();
-    void addPhysicSprite();
-
     void runFx(cocos2d::CCPoint point);
     void runFxCallBack(cocos2d::CCNode* pSend);
 

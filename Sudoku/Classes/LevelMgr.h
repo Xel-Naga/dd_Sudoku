@@ -21,10 +21,10 @@ class LevelInfo  {
 public:
     LevelInfo() {
         is_lock = true;
-        complete_time = "";
+        complete_time = 0;
     }
     bool is_lock;
-    std::string complete_time;//完成时间，年月日，时分秒等
+    int complete_time;//完成时间
 };
 
 #define LEVEL_SN_TYPE unsigned int
@@ -33,7 +33,9 @@ public:
 //如果是网络游戏，则包括了用户信息，至少需要与某个用户ID关联，暂时可以不考虑，给个接口就行了
 class LevelMgr: public BAGUA::Singleton<LevelMgr> {
 public:
+    void clear();
     void add_level(LevelMap* level);
+    void loadLevelInfo();
     LevelInfo* get_level_info(LEVEL_SN_TYPE level_sn);
     LevelMap* get_level_map(LEVEL_SN_TYPE level_sn);
     static LEVEL_SN_TYPE alloc_level_sn() { return _next_level_sn++;}

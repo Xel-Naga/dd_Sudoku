@@ -78,7 +78,7 @@ public class sudoku extends Cocos2dxActivity {
 		};
 
 		if (detectOpenGLES20()) {
-			AppConnect.getInstance("09f277ca386ee99cb4c910e09f562112",
+			AppConnect.getInstance("c6a9b1d560e554e84202c0b538a68e05",
 					"huawei", this);
 		} else {
 			Log.d("activity", "don't support gles2.0");

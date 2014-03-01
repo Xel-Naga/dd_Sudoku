@@ -3,6 +3,12 @@
 #include "HelloWorldScene.h"
 #include "ScoreMgr.h"
 
+#include <sstream>
+#include <fstream>
+#include "json/json.h"
+
+const int LEVEL_PER_LINE = 4;
+
 USING_NS_CC_EXT;
 namespace XAXA {
 
@@ -12,143 +18,127 @@ void add_level(int level[SUDOKU_GRID][SUDOKU_GRID],int level_win[SUDOKU_GRID][SU
     LevelMgr::instance()->add_level(new_level);
 }
 
-void add_level1() {
-    int level[SUDOKU_GRID][SUDOKU_GRID] = { 7,9,8,5,4,1,3,2,6,
-                                            4,5,3,6,2,9,8,1,7,
-                                            6,2,1,3,8,7,9,4,5,
-                                            5,4,9,2,1,8,6,7,3,
-                                            1,7,6,4,5,3,2,9,8,
-                                            8,3,2,9,7,6,4,5,1,
-                                            3,1,4,8,9,5,7,6,2,
-                                            2,6,7,1,3,4,5,8,9,
-                                            9,8,5,7,6,2,1,3,255
-    };
+void loadLevel() {
+    int level[SUDOKU_GRID][SUDOKU_GRID];
+    int level_win[SUDOKU_GRID][SUDOKU_GRID];
+    std::ifstream ifs;
+    ifs.open("level.json");
+    assert(ifs.is_open());
+ 
+    Json::Reader reader;
+    Json::Value root;
+    if (!reader.parse(ifs, root, false))
+    {
+        return ;
+    }
+ 
+    int size = root.size();
+    for (int i=0; i<size; ++i)
+    {
+        int level_sn = root[i]["Level"].asInt();
+        std::string map = root[i]["map"].asString();
+        //CCLOG("map:%s",map.c_str());
+        std::stringstream mapstream(map);
+        char seperator;
 
-    int level_win[SUDOKU_GRID][SUDOKU_GRID] = { 7,9,8,5,4,1,3,2,6,
-                                            4,5,3,6,2,9,8,1,7,
-                                            6,2,1,3,8,7,9,4,5,
-                                            5,4,9,2,1,8,6,7,3,
-                                            1,7,6,4,5,3,2,9,8,
-                                            8,3,2,9,7,6,4,5,1,
-                                            3,1,4,8,9,5,7,6,2,
-                                            2,6,7,1,3,4,5,8,9,
-                                            9,8,5,7,6,2,1,3,4
-    };
+        for(int j = 0; j < SUDOKU_GRID*SUDOKU_GRID; ++j) {
+            int height = j/SUDOKU_GRID;
+            int width = j%SUDOKU_GRID;
+            mapstream>>level[height][width];
+            //CCLOG("%d",level[height][width]);
+            mapstream>>seperator;
+        }
 
-    add_level(level,level_win);
-}
+        std::string map_win = root[i]["map_win"].asString();
+        //CCLOG("map_win:%s",map_win.c_str());
+        mapstream.str(map_win);
+        for(int j = 0; j < SUDOKU_GRID*SUDOKU_GRID; ++j) {
+            int height = j/SUDOKU_GRID;
+            int width = j%SUDOKU_GRID;
+            mapstream>>level_win[height][width];
+            //CCLOG("%d",level_win[height][width]);
+            mapstream>>seperator;
+        }
 
-void add_level2() {
-    int level[SUDOKU_GRID][SUDOKU_GRID] = { 3,6,255,255,7,255,255,255,5,
-                                            255,255,255,6,2,255,255,255,255,
-                                            255,255,1,255,255,255,255,7,255,
-                                            4,9,255,255,255,255,255,255,255,
-                                            255,255,255,255,255,8,255,4,255,
-                                            255,7,255,3,5,255,9,255,255,
-                                            7,255,255,1,255,255,5,255,4,
-                                            255,255,6,255,4,255,255,255,1,
-                                            255,2,255,255,255,9,3,255,255,
-    };
-
-    int level_win[SUDOKU_GRID][SUDOKU_GRID] = { 3,6,8,9,7,1,4,2,5,
-                                                9,4,7,6,2,5,1,3,8,
-                                                2,5,1,4,8,3,6,7,9,
-                                                4,9,3,7,1,6,8,5,2,
-                                                6,1,5,2,9,8,7,4,3,
-                                                8,7,2,3,5,4,9,1,6,
-                                                7,8,9,1,3,2,5,6,4,
-                                                5,3,6,8,4,7,2,9,1,
-                                                1,2,4,5,6,9,3,8,7,
-    };
-
-    add_level(level,level_win);
-}
-
-void add_level3() {
-    int level[SUDOKU_GRID][SUDOKU_GRID] = { 255,255,7,255,255,255,255,255,255,
-                                            3,255,255,255,4,1,255,2,255,
-                                            8,1,255,2,255,255,255,9,255,
-                                            255,255,255,255,255,255,7,255,255,
-                                            6,255,255,255,255,9,255,1,255,
-                                            255,255,255,3,8,7,255,255,255,
-                                            255,255,9,255,3,6,255,7,255,
-                                            255,255,255,255,255,255,8,255,3,
-                                            255,255,6,255,255,4,255,255,255,
-    };
-
-    int level_win[SUDOKU_GRID][SUDOKU_GRID] = { 2,6,7,5,9,8,4,3,1,
-                                                3,9,5,7,4,1,6,2,8,
-                                                8,1,4,2,6,3,5,9,7,
-                                                9,4,3,6,1,2,7,8,5,
-                                                6,7,8,4,5,9,3,1,2,
-                                                1,5,2,3,8,7,9,4,6,
-                                                5,8,9,1,3,6,2,7,4,
-                                                4,2,1,9,7,5,8,6,3,
-                                                7,3,6,8,2,4,1,5,9,
-    };
-
-    add_level(level,level_win);
-}
-
-void add_level4() {
-    int level[SUDOKU_GRID][SUDOKU_GRID] = { 255,255,255,255,255,255,4,3,255,
-                                            255,255,255,255,1,255,6,2,255,
-                                            255,8,1,255,255,255,255,255,255,
-                                            7,255,255,9,255,255,255,255,255,
-                                            255,3,255,7,5,255,9,6,255,
-                                            255,1,255,255,255,255,255,255,3,
-                                            255,7,5,255,255,9,2,255,255,
-                                            255,255,255,255,255,255,255,255,255,
-                                            6,255,255,8,3,5,255,7,255,
-    };
-
-    int level_win[SUDOKU_GRID][SUDOKU_GRID] = { 2,6,7,5,9,8,4,3,1,
-                                                9,5,3,4,1,7,6,2,8,
-                                                4,8,1,3,2,6,5,9,7,
-                                                7,2,6,9,4,3,8,1,5,
-                                                8,3,4,7,5,1,9,6,2,
-                                                5,1,9,6,8,2,7,4,3,
-                                                3,7,5,1,6,9,2,8,4,
-                                                1,9,8,2,7,4,3,5,6,
-                                                6,4,2,8,3,5,1,7,9,
-    };
-
-    add_level(level,level_win);
+        add_level(level,level_win);
+    }
 }
 
 class LevelBtn: public CCNode {
-    LevelBtn() {
-        btnLevel = createButtonWithTitle("1",s_BtnLevelNormal,s_BtnLevelNormal,ccc3(0,0,255),20);
-        addChild(btnLevel,Z_GAME_LAYER);
-        btnLevel->setPosition(160,160);
-        btnLevel->setPreferredSize(CCSize(128,128));
-        btnLevel->addTargetWithActionForControlEvents(this, cccontrol_selector(LevelLayer::onPressLevelBtn), CCControlEventTouchUpInside);  
+public:
+    LevelBtn(int i, const char* bg, const char* bg_hi,ccColor3B color, float fontSize) {
+        
+        char buff[8];
+        sprintf(buff,"%d",i);
+        _btnLevel = createButtonWithTitle(buff,bg,bg_hi,color,fontSize);
+        addChild(_btnLevel,Z_GAME_LAYER,i);
+        _btnLevel->setPreferredSize(CCSize(128,128));
+        _btnLevel->setScale(0.7f);
+        _btnLevel->addTargetWithActionForControlEvents(this, cccontrol_selector(LevelBtn::onPressBtn), CCControlEventTouchUpInside);  
+
+        //setContentSize(CCSize(128,128));
+
+        _iconLock = CCScale9Sprite::create(s_lock_0);
+        _iconLock->setScale(0.4f);
+        addChild(_iconLock,Z_GAME_LAYER+1);
+        //iconLock->setPosition(128,128);
+        _isLocked = true;
     }
-    CCControlButton * btnLevel;
+
+    void setLocked(bool needLock) {
+        _isLocked = needLock;
+
+        if(needLock) {
+            _iconLock->setVisible(true); 
+            _btnLevel->setTouchEnabled(false);
+        }
+        else {
+            _iconLock->setVisible(false);
+            _btnLevel->setTouchEnabled(true);
+        }
+    }
+
+protected:
+    void onPressBtn(cocos2d::CCObject *pSender, cocos2d::extension::CCControlEvent pCCControlEvent) {
+        if(!_isLocked) {
+            CCControlButton* btn = (CCControlButton*)pSender;
+            goToLevel(btn->getTag());
+        }
+    }
+
+    void goToLevel(LEVEL_SN_TYPE sn) {
+    XAXA::LevelMgr::instance()->set_curr_level(sn);
+    CCScene* se=HelloWorld::scene();
+    CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(1.2f, se));
+}
+
+    CCControlButton * _btnLevel;
+    CCScale9Sprite * _iconLock;
+    bool _isLocked;
 };
 
 //非常重要，CCB中的自定义类不会再调用其init函数，需要在onNodeLoaded中手工调用一下
 bool LevelLayer::init() {
-    add_level1();
-    LevelMgr::instance()->get_level_info(0)->is_lock = false;
-    add_level2();
-    LevelMgr::instance()->get_level_info(1)->is_lock = false;
-    add_level3();
-    add_level4();
+    LevelMgr::instance()->clear();
+    loadLevel();
+    LevelMgr::instance()->loadLevelInfo();
 
     char buff[8];
     for(int i = 0; i < LevelMgr::instance()->get_level_count(); i++) {
-        sprintf(buff,"%d",i);
-        CCControlButton * lv1 = createButtonWithTitle(buff,s_BtnLevelNormal,s_BtnLevelNormal,ccc3(0,0,255),20);
-        addChild(lv1,Z_GAME_LAYER,i);
-        lv1->setPreferredSize(CCSize(128,128));
-        lv1->setScale(0.7f);
+        LevelBtn * level = new LevelBtn(i,s_BtnLevelNormal,s_BtnLevelNormal,ccc3(0,0,255),20);
+        addChild(level,Z_GAME_LAYER,i);
         float width = 128*0.7f;
-        float x = 10+width*0.5f+(width*0.7f)*(i%3);
-        float y = (360 - (width*0.7f)*(i/3));
-        lv1->setPosition(x,y);
+        float x = 20+width*0.5f+(width*0.7f)*(i%LEVEL_PER_LINE);
+        float y = (360 - (width*0.7f)*(i/LEVEL_PER_LINE));
+        level->setPosition(x,y);
         CCLOG("level position:%0.1f,%0.1f",x,y);
-        lv1->addTargetWithActionForControlEvents(this, cccontrol_selector(LevelLayer::onPressLevelBtn), CCControlEventTouchUpInside);  
+        LevelInfo* lvlInfo = LevelMgr::instance()->get_level_info(i);
+        if(i < 3) {
+            level->setLocked(false); 
+        }
+        else {
+            level->setLocked(lvlInfo->is_lock);
+        }
     }
     return true;
 }
@@ -175,7 +165,7 @@ bool LevelLayer::onAssignCCBMemberVariable(CCObject * pTarget, const char * pMem
 void LevelLayer::goToLevel(LEVEL_SN_TYPE sn) {
     XAXA::LevelMgr::instance()->set_curr_level(sn);
     CCScene* se=HelloWorld::scene();
-    CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(1.2f, se));
+    CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.5f, se));
     //se->autorelease();
 }
 

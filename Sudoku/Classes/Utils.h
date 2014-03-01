@@ -44,11 +44,11 @@ USING_NS_CC_EXT;
     if(node != NULL) { \
         scene->addChild(node); \
     } \
-    CCDirector::sharedDirector()->replaceScene(CCTransitionMoveInR::create(1,scene)); \
+    CCDirector::sharedDirector()->replaceScene(CCTransitionFade::create(0.5f,scene)); \
     CCLOG(#layer_name":: reference:%d",this->retainCount()); \
 }
 
-CCControlButton * createButtonWithTitle(const char * title, const char* bg, const char* bg_hi,ccColor3B color,int fontSize);
+CCControlButton * createButtonWithTitle(const char * title, const char* bg, const char* bg_hi,ccColor3B color,float fontSize);
 
 
 #endif

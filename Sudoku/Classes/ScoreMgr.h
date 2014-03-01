@@ -12,8 +12,8 @@ class ScoreMgr: public BAGUA::Singleton<ScoreMgr> {
 public:
     void saveInt(const char* key, int value, bool needFlush = true);
     void saveString(const char* key, const std::string& value, bool needFlush = true);
-    int loadInt(const char* key);
-    std::string loadString(const char* key);
+    int loadInt(const char* key,int defaultValue=0);
+    std::string loadString(const char* key, const std::string& defaultValue=std::string(""));
     void flush();
 };
 
