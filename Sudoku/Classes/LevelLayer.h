@@ -52,6 +52,7 @@ public:
     void onPressLevelBtn(cocos2d::CCObject * pSender, cocos2d::extension::CCControlEvent pCCControlEvent);
 
     void goToLevel(LEVEL_SN_TYPE sn);
+    void menuGotoMainMenu(CCObject* pSender);
 };
 
 CREATE_AUTORELEASE_LOADER(LevelLayer);

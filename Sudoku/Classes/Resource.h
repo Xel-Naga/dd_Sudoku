@@ -48,6 +48,9 @@ static const char s_BtnCloseSelected[]   	= "Images/CloseSelected.png";
 static const char s_BtnLevelNormal[]   	= "Images/star_0.png";
 static const char s_lock_0[]   	= "Images/lock0.png";
 
+static const char s_navigate_left[] = "Images/navigate-left256.png";
+static const char s_pause[] = "Images/pause256.png";
+
 static const char s_TestChs[]               = "测试";
 static const std::wstring s_LoadingChs               = L"测试一下加载界面...";
 

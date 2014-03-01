@@ -167,7 +167,7 @@ public:
 				//CCLOG("input grid:x:%0.1f, y:%0.1f",x,y);
 				pGrid->GetNode()->setPosition(ccp(x,y));
 				pGrid->GetNode()->setAnchorPoint(ccp(0.0f,0.0f));
-				_pad->addChild(pGrid->GetNode(), Z_INPUT_GRID_NUMBER);
+				_pad->addChild(pGrid->GetNode(), Z_INPUT_GRID_NUMBER,i*j);
 			}
 		}
 
@@ -351,23 +351,15 @@ bool HelloWorld::init()
 	// 2. add a menu item with "X" image, which is clicked to quit the program
 	//    you may modify it.
 
-	// add a "close" icon to exit the progress. it's an autorelease object
-	CCMenuItemImage *pCloseItem = CCMenuItemImage::create(
-										s_BtnCloseNormal,
-										s_BtnCloseSelected,
-										this,
-										menu_selector(HelloWorld::menuCloseCallback));
-	
-	pCloseItem->setPosition(ccp(origin.x + visibleSize.width/2 - pCloseItem->getContentSize().width/2 ,
-								origin.y + pCloseItem->getContentSize().height/2));
-
-	CCMenuItemFont *pMenuItem = CCMenuItemFont::create("Main",this,menu_selector(HelloWorld::menuGotoMainMenu));
-	pMenuItem->setFontSize(10);
-	pMenuItem->setColor(ccc3(255,255,255));
-	pMenuItem->setPosition(ccp(origin.x + visibleSize.width/2 - pCloseItem->getContentSize().width/2 ,
-								origin.y + pCloseItem->getContentSize().height/2+30));
+	CCMenuItemImage *pMainItem = CCMenuItemImage::create(s_navigate_left,
+										s_navigate_left,
+										this,menu_selector(HelloWorld::menuGotoMainMenu));
+    float scaleValue = 0.2f;
+	pMainItem->setScale(scaleValue);
+    pMainItem->setPosition(ccp(origin.x + pMainItem->getContentSize().width*scaleValue/2+15,
+								origin.y + pMainItem->getContentSize().height*scaleValue/2));
 	// create menu, it's an autorelease object
-	CCMenu* pMenu = CCMenu::create(pCloseItem,pMenuItem, NULL);
+	CCMenu* pMenu = CCMenu::create(pMainItem, NULL);
 	pMenu->setPosition(CCPointZero);
 	this->addChild(pMenu, 1);
 
@@ -468,7 +460,6 @@ void HelloWorld::menuGotoMainMenu(CCObject* pSender) {
     REPLACE_SCENE_FROM_CCBI(MainLayer);
 	//这里必须取消触摸代理，否则由于被引用将导致无法释放
 	CCDirector::sharedDirector()->getTouchDispatcher()->removeDelegate(this);
-
 }
 
 bool HelloWorld::canInput(CCTouch* pTouch) {

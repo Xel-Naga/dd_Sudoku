@@ -2,6 +2,8 @@
 #include "LevelLayer.h"
 #include "HelloWorldScene.h"
 #include "ScoreMgr.h"
+#include "MainLayer.h"
+#include "Utils.h"
 
 #include <sstream>
 #include <fstream>
@@ -123,7 +125,6 @@ bool LevelLayer::init() {
     loadLevel();
     LevelMgr::instance()->loadLevelInfo();
 
-    char buff[8];
     for(int i = 0; i < LevelMgr::instance()->get_level_count(); i++) {
         LevelBtn * level = new LevelBtn(i,s_BtnLevelNormal,s_BtnLevelNormal,ccc3(0,0,255),20);
         addChild(level,Z_GAME_LAYER,i);
@@ -140,7 +141,24 @@ bool LevelLayer::init() {
             level->setLocked(lvlInfo->is_lock);
         }
     }
+
+    CCMenuItemImage *pMainItem = CCMenuItemImage::create(s_navigate_left,
+										s_navigate_left,
+										this,menu_selector(LevelLayer::menuGotoMainMenu));
+    float scaleValue = 0.2f;
+	pMainItem->setScale(scaleValue);
+    pMainItem->setPosition(ccp(pMainItem->getContentSize().width*scaleValue/2+15,
+								pMainItem->getContentSize().height*scaleValue/2));
+	// create menu, it's an autorelease object
+	CCMenu* pMenu = CCMenu::create(pMainItem, NULL);
+	pMenu->setPosition(CCPointZero);
+	this->addChild(pMenu, 1);
+
     return true;
+}
+
+void LevelLayer::menuGotoMainMenu(CCObject* pSender) {
+    REPLACE_SCENE_FROM_CCBI(MainLayer);
 }
 
 void LevelLayer::onNodeLoaded(CCNode * pNode, CCNodeLoader * pNodeLoader) {
