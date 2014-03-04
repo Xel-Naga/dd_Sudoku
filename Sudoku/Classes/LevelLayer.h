@@ -53,6 +53,8 @@ public:
 
     void goToLevel(LEVEL_SN_TYPE sn);
     void menuGotoMainMenu(CCObject* pSender);
+
+    void loadLevel();
 };
 
 CREATE_AUTORELEASE_LOADER(LevelLayer);

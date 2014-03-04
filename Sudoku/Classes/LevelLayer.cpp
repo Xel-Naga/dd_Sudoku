@@ -4,6 +4,7 @@
 #include "ScoreMgr.h"
 #include "MainLayer.h"
 #include "Utils.h"
+#include "platform/CCFileUtils.h"
 
 #include <sstream>
 #include <fstream>
@@ -20,26 +21,29 @@ void add_level(int level[SUDOKU_GRID][SUDOKU_GRID],int level_win[SUDOKU_GRID][SU
     LevelMgr::instance()->add_level(new_level);
 }
 
-void loadLevel() {
+void LevelLayer::loadLevel() {
     int level[SUDOKU_GRID][SUDOKU_GRID];
     int level_win[SUDOKU_GRID][SUDOKU_GRID];
-    std::ifstream ifs;
-    ifs.open("level.json");
-    assert(ifs.is_open());
- 
+    std::string path = CCFileUtils::sharedFileUtils()->fullPathForFilename( "level.json" );
+    unsigned long fileSize = 0;
+    unsigned char * fileContents = CCFileUtils::sharedFileUtils()->getFileData(path.c_str(),"r", &fileSize );
+
     Json::Reader reader;
     Json::Value root;
-    if (!reader.parse(ifs, root, false))
+    if (!reader.parse((char*)fileContents, root, false))
     {
+        CCLOG("loadLevel() parse json failed");
         return ;
     }
  
     int size = root.size();
+    CCLOG("loadLevel() size:%d",size);
+
     for (int i=0; i<size; ++i)
     {
         int level_sn = root[i]["Level"].asInt();
         std::string map = root[i]["map"].asString();
-        //CCLOG("map:%s",map.c_str());
+        CCLOG("map:%s",map.c_str());
         std::stringstream mapstream(map);
         char seperator;
 
@@ -52,7 +56,7 @@ void loadLevel() {
         }
 
         std::string map_win = root[i]["map_win"].asString();
-        //CCLOG("map_win:%s",map_win.c_str());
+        CCLOG("map_win:%s",map_win.c_str());
         mapstream.str(map_win);
         for(int j = 0; j < SUDOKU_GRID*SUDOKU_GRID; ++j) {
             int height = j/SUDOKU_GRID;

@@ -5,7 +5,6 @@ USING_NS_CC;
 #include "ResolutionAdaptor.h"
 
 #include "json/json.h"
-
 #include <sstream>
 #include <fstream>
 
