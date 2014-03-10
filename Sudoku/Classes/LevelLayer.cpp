@@ -146,10 +146,10 @@ bool LevelLayer::init() {
         }
     }
 
-    CCMenuItemImage *pMainItem = CCMenuItemImage::create(s_navigate_left,
-										s_navigate_left,
+    CCMenuItemImage *pMainItem = CCMenuItemImage::create(s_back,
+										s_back_sel,
 										this,menu_selector(LevelLayer::menuGotoMainMenu));
-    float scaleValue = 0.2f;
+    float scaleValue = 0.5f;
 	pMainItem->setScale(scaleValue);
     pMainItem->setPosition(ccp(pMainItem->getContentSize().width*scaleValue/2+15,
 								pMainItem->getContentSize().height*scaleValue/2));

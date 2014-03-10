@@ -48,8 +48,17 @@ static const char s_BtnCloseSelected[]   	= "Images/CloseSelected.png";
 static const char s_BtnLevelNormal[]   	= "Images/star_0.png";
 static const char s_lock_0[]   	= "Images/lock0.png";
 
-static const char s_navigate_left[] = "Images/navigate-left256.png";
-static const char s_pause[] = "Images/pause256.png";
+static const char s_back[] = "Images/back.png";
+static const char s_back_sel[] = "Images/back_sel.png";
+static const char s_play[] = "Images/play.png";
+static const char s_play_sel[] = "Images/play_sel.png";
+static const char s_pause[] = "Images/pause.png";
+static const char s_pause_sel[] = "Images/pause_sel.png";
+static const char s_home[] = "Images/home.png";
+static const char s_home_sel[] = "Images/home_sel.png";
+
+static const char s_grid_frame[] = "Images/grid_frame.png";
+
 
 static const char s_TestChs[]               = "测试";
 static const std::wstring s_LoadingChs               = L"测试一下加载界面...";

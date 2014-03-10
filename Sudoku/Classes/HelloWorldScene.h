@@ -32,6 +32,8 @@ private:
     // a selector callback
     void menuCloseCallback(CCObject* pSender);
     void menuGotoMainMenu(CCObject* pSender);
+    void menuGoBackMenu(CCObject* pSender);
+    void menuPauseCallback(CCObject* pSender);
 
     virtual bool ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent);
     virtual void ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent);
@@ -55,6 +57,11 @@ private:
 
     void highLightGrid(CCTouch *pTouch);
     void loadTexture();
+
+    void unlockNextLevel();
+
+    void initMenu(CCSize visibleSize,CCPoint origin);
+
 private:
     CCLabelBMFont*    _labelProgress;
     CCLabelBMFont*    _labelTimer0;
@@ -64,6 +71,8 @@ private:
     cpSpace* m_pSpace; // strong ref
     cpShape* m_pWalls[4];
     CCTexture2D* m_pSpriteTexture; // weak ref
+    bool _isWin;//是否已经过关
+    bool _isPaused;//是否暂停
 #if CC_ENABLE_CHIPMUNK_INTEGRATION
     CCPhysicsDebugNode* m_pDebugLayer; // weak ref
 #endif

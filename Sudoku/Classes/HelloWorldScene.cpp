@@ -10,8 +10,10 @@ using namespace CocosDenshion;
 
 #include <stdio.h>
 #include <string.h>
-
 #include <list>
+
+//调用广告的接口
+#include "WapsAd.h"
 
 USING_NS_CC;
 
@@ -61,7 +63,7 @@ public:
 
 		if(pTexture) {
 			//_pGrid = CCSprite::createWithTexture(pTexture);
-            _pHighlight = CCScale9Sprite::createWithSpriteFrameName("button_hi.png");
+            _pHighlight = CCScale9Sprite::createWithSpriteFrameName(s_grid_frame);
             _pHighlight->setContentSize(g_gridSize);
             _pHighlight->setAnchorPoint(ccp(0.5f,0.5f));
 			_pHighlight->setPosition(g_gridSize.width/2,g_gridSize.height/2);
@@ -306,15 +308,66 @@ void HelloWorld::addProgress(CCPoint origin, CCSize visibleSize) {
     schedule(schedule_selector(HelloWorld::timeProcess), 1.0f);
 }
 
+void addImageToSpriteCache(const char* imageName) {
+    CCSpriteFrameCache* cache = CCSpriteFrameCache::sharedSpriteFrameCache();
+    //char buf[64];
+    //sprintf(buf,"Images/%s",imageName);
+    CCTexture2D* pTexture = CCTextureCache::sharedTextureCache()->addImage(imageName);
+    CCSpriteFrame* pSpriteFrame = CCSpriteFrame::createWithTexture(pTexture,CCRect(0,0,pTexture->getContentSize().width,pTexture->getContentSize ().height ));
+    cache->addSpriteFrame(pSpriteFrame,imageName);
+}
+
 void HelloWorld::loadTexture() {
+    addImageToSpriteCache(s_grid_frame);
+    addImageToSpriteCache(s_pause);
+    addImageToSpriteCache(s_play);
+    addImageToSpriteCache(s_pause_sel);
+    addImageToSpriteCache(s_play_sel);
+    addImageToSpriteCache(s_home);
+    addImageToSpriteCache(s_home_sel);
     CCSpriteFrameCache* cache = CCSpriteFrameCache::sharedSpriteFrameCache();
 	cache->addSpriteFramesWithFile("Images/ccbDefaultImages.plist");
 
-    CCTexture2D* pTexture = CCTextureCache::sharedTextureCache()->addImage("Images/button_hi.png");
-    CCSpriteFrame* pSpriteFrame = CCSpriteFrame::createWithTexture(pTexture,CCRect(0,0,pTexture->getContentSize().width,pTexture->getContentSize ().height ));
-    cache->addSpriteFrame(pSpriteFrame,"button_hi.png");
-
     CCTextureCache::sharedTextureCache()->addImage("fx/light.png");
+}
+
+void HelloWorld::initMenu(CCSize visibleSize,CCPoint origin) {
+	CCMenuItemImage *pBackItem = CCMenuItemImage::create(s_back,
+										s_back_sel,
+										this,menu_selector(HelloWorld::menuGotoMainMenu));
+    float scaleValue = 0.5f;
+	pBackItem->setScale(scaleValue);
+    //pBackItem->setAnchorPoint(CCPoint(0,0));
+    //pBackItem->setPosition(0,0);
+   
+    CCScale9Sprite* pauseSprite1 = CCScale9Sprite::createWithSpriteFrameName(s_pause);
+    CCScale9Sprite* pauseSprite2 = CCScale9Sprite::createWithSpriteFrameName(s_pause_sel);
+    CCMenuItemSprite* pauseItem = CCMenuItemSprite::create(pauseSprite1,pauseSprite2,this,NULL);
+    
+    CCScale9Sprite* continueSprite1 = CCScale9Sprite::createWithSpriteFrameName(s_play);
+    CCScale9Sprite* continueSprite2 = CCScale9Sprite::createWithSpriteFrameName(s_play_sel);
+    CCMenuItemSprite* continueItem = CCMenuItemSprite::create(continueSprite1,continueSprite2,this,NULL);
+     
+    CCMenuItemToggle* pauseToggle = CCMenuItemToggle::createWithTarget(this,
+        menu_selector(HelloWorld::menuPauseCallback),pauseItem,continueItem,NULL);
+
+    pauseToggle->setScale(scaleValue);
+    //pauseToggle->setAnchorPoint(CCPoint(0,0));
+    //pauseToggle->setPosition(pBackItem->getContentSize().width*scaleValue,0);
+
+    CCMenuItemImage *homeItem = CCMenuItemImage::create(s_home,
+									s_home_sel,
+									this,menu_selector(HelloWorld::menuGotoMainMenu));
+	homeItem->setScale(scaleValue);
+    //homeItem->setAnchorPoint(CCPoint(0,0));
+    //homeItem->setPosition(0,0);
+
+	// create menu, it's an autorelease object
+	CCMenu* pMenu = CCMenu::create(pBackItem,pauseToggle,homeItem, NULL);
+    pMenu->setAnchorPoint(CCPoint(0.5,0.5));
+	pMenu->setPosition(pMenu->getContentSize().width/2,homeItem->getContentSize().height*scaleValue/2);
+    pMenu->alignItemsHorizontallyWithPadding (25);
+	this->addChild(pMenu, 1);
 }
 
 // on "init" you need to initialize your instance
@@ -326,6 +379,9 @@ bool HelloWorld::init()
 	{
 		return false;
 	}
+
+    _isWin = false;
+    _isPaused = false;
 
 	_inputGrid = NULL;
 
@@ -350,18 +406,8 @@ bool HelloWorld::init()
 	/////////////////////////////
 	// 2. add a menu item with "X" image, which is clicked to quit the program
 	//    you may modify it.
+    initMenu(visibleSize,origin);
 
-	CCMenuItemImage *pMainItem = CCMenuItemImage::create(s_navigate_left,
-										s_navigate_left,
-										this,menu_selector(HelloWorld::menuGotoMainMenu));
-    float scaleValue = 0.2f;
-	pMainItem->setScale(scaleValue);
-    pMainItem->setPosition(ccp(origin.x + pMainItem->getContentSize().width*scaleValue/2+15,
-								origin.y + pMainItem->getContentSize().height*scaleValue/2));
-	// create menu, it's an autorelease object
-	CCMenu* pMenu = CCMenu::create(pMainItem, NULL);
-	pMenu->setPosition(CCPointZero);
-	this->addChild(pMenu, 1);
 
 	/////////////////////////////
 	// 3. add your codes below...
@@ -410,6 +456,10 @@ bool HelloWorld::init()
 }
 
 void HelloWorld::timeProcess(float dt) {
+    //胜利后或者暂停后都不计时
+    if(_isWin || _isPaused) {
+        return;
+    }
     _timeCost0 +=dt;
 
     char str[10] = {0};
@@ -440,26 +490,37 @@ void HelloWorld::menuCloseCallback(CCObject* pSender)
 }
 
 void HelloWorld::saveScores() {
-    //我们这里简单存储条数据
     char buff[32];
     LEVEL_SN_TYPE level = XAXA::LevelMgr::instance()->get_curr_level();
     sprintf(buff,"level_%d_lock",(int)level);
     ScoreMgr::instance()->saveInt(buff, (int)0);
     sprintf(buff,"level_%d_timecost",(int)level);
     ScoreMgr::instance()->saveInt(buff,(int)_timeCost0);
-    
-    //取出我们刚存储的然后赋值给str验证下；
-    int testReadLevel= ScoreMgr::instance()->loadInt("level");
-    int testReadTimeCost = ScoreMgr::instance()->loadInt("timeCost");
-    CCLog("level:%d,time:%d",testReadLevel,testReadTimeCost);
-
 }
+
+void HelloWorld::menuGoBackMenu(CCObject* pSender) {
+    saveScores();
+    REPLACE_SCENE_FROM_CCBI(LevelLayer);
+	//这里必须取消触摸代理，否则由于被引用将导致无法释放
+	CCDirector::sharedDirector()->getTouchDispatcher()->removeDelegate(this);
+}
+
 
 void HelloWorld::menuGotoMainMenu(CCObject* pSender) {
     saveScores();
     REPLACE_SCENE_FROM_CCBI(MainLayer);
 	//这里必须取消触摸代理，否则由于被引用将导致无法释放
 	CCDirector::sharedDirector()->getTouchDispatcher()->removeDelegate(this);
+}
+
+void HelloWorld::menuPauseCallback(CCObject* pSender) {
+    if(_isPaused) {
+        _isPaused = false;
+        return;
+    }
+
+    _isPaused = true;
+    WapsAd::showAd(0);
 }
 
 bool HelloWorld::canInput(CCTouch* pTouch) {
@@ -528,6 +589,21 @@ void HelloWorld::highLightGrid(CCTouch *pTouch) {
 	}
 }
 
+void HelloWorld::unlockNextLevel() {
+    unsigned int level_sn = XAXA::LevelMgr::instance()->get_curr_level();
+
+    if(level_sn+1 == XAXA::LevelMgr::instance()->get_level_count()) {
+        return;
+    }
+    XAXA::LevelInfo* levelInfo = XAXA::LevelMgr::instance()->get_level_info(level_sn+1);
+    if(levelInfo) {
+        levelInfo->is_lock = false;
+        char buff[32];
+        sprintf(buff,"level_%d_lock",(int)(level_sn+1));
+        ScoreMgr::instance()->saveInt(buff, (int)0);
+    }
+}
+
 //如果是简单的单击处理，只需要在Began中处理就可以了，无需到ccTouchEnded中
 bool HelloWorld::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent) {
 
@@ -540,6 +616,12 @@ bool HelloWorld::ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent) {
 			//此处关闭单点触摸,只能点击按钮进行下一步
 			CCDirector::sharedDirector()->getTouchDispatcher()->removeDelegate(this); 
 			showWin();
+            unlockNextLevel();
+            //将胜利信息存入
+            _isWin = true;
+            char buff[32];
+            sprintf(buff,"level_%d_win",(int)XAXA::LevelMgr::instance()->get_curr_level());
+            ScoreMgr::instance()->saveInt(buff, (int)1);
 		}
 		return true;
 	}

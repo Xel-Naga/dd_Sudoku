@@ -46,6 +46,8 @@ void LevelMgr::loadLevelInfo() {
         lvlInfo->is_lock = (bool)ScoreMgr::instance()->loadInt(buff,1);
         sprintf(buff,"level_%d_timecost",(int)i);
         lvlInfo->complete_time = ScoreMgr::instance()->loadInt(buff,0);
+        sprintf(buff,"level_%d_win",(int)i);
+        lvlInfo->is_win = ScoreMgr::instance()->loadInt(buff,0);
     }
 }
 

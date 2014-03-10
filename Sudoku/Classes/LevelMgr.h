@@ -25,6 +25,7 @@ public:
     }
     bool is_lock;
     int complete_time;//完成时间
+    bool is_win;//是否过关
 };
 
 #define LEVEL_SN_TYPE unsigned int
