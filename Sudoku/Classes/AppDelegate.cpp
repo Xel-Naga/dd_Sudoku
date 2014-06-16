@@ -6,10 +6,10 @@
 #include "SimpleAudioEngine.h"
 using namespace CocosDenshion;
 
-#include "LoadingScene.h"
-#include "AppMacros.h"
-
 #include "ResolutionAdaptor.h"
+#include "LoadingScene.h"
+
+#include "AppMacros.h"
 
 USING_NS_CC;
 using namespace std;
@@ -50,7 +50,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     // create a scene. it's an autorelease object
     CCScene *pScene = XAXA::LoadingScene::scene();
-
+    //REPLACE_SCENE_FROM_CCBI(MainLayer);
+    //RUN_SCENE_FROM_CCBI(MainLayer);
     // run
     pDirector->runWithScene(pScene);
 

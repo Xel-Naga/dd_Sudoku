@@ -161,8 +161,8 @@ CCControlButton * createButtonWithTitle(const char * title, const char* bg, cons
     CCScale9Sprite *backgroundButton = CCScale9Sprite::create(bg);
     CCScale9Sprite *backgroundHighlightedButton = CCScale9Sprite::create(bg_hi);
     
-    CCLabelBMFont *titleButton = CCLabelBMFont::create(title, "fonts/futura-48.fnt");
-    titleButton->setScale((float)fontSize/48);
+    CCLabelAtlas *titleButton = CCLabelAtlas::create(title, "fonts/ink_number.png",20,32,'0');
+    //titleButton->setScale((float)fontSize/48);
     //titleButton->setColor(color);
     
     CCControlButton *button = CCControlButton::create(titleButton, backgroundButton);
@@ -170,4 +170,13 @@ CCControlButton * createButtonWithTitle(const char * title, const char* bg, cons
     button->setTitleColorForState(ccWHITE, CCControlStateHighlighted);
     
     return button;
+}
+
+void addImageToSpriteCache(const char* imageName) {
+    CCSpriteFrameCache* cache = CCSpriteFrameCache::sharedSpriteFrameCache();
+    //char buf[64];
+    //sprintf(buf,"Images/%s",imageName);
+    CCTexture2D* pTexture = CCTextureCache::sharedTextureCache()->addImage(imageName);
+    CCSpriteFrame* pSpriteFrame = CCSpriteFrame::createWithTexture(pTexture,CCRect(0,0,pTexture->getContentSize().width,pTexture->getContentSize ().height ));
+    cache->addSpriteFrame(pSpriteFrame,imageName);
 }

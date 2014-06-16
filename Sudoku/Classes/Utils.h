@@ -28,6 +28,7 @@ class layer_name##Loader: public cocos2d::extension::CCLayerLoader { \
 USING_NS_CC;
 USING_NS_CC_EXT;
 
+
 #define REPLACE_SCENE_FROM_CCBI(layer_name) \
 { \
     /* Create an autorelease CCNodeLoaderLibrary. */ \
@@ -48,7 +49,8 @@ USING_NS_CC_EXT;
     CCLOG(#layer_name":: reference:%d",this->retainCount()); \
 }
 
-CCControlButton * createButtonWithTitle(const char * title, const char* bg, const char* bg_hi,ccColor3B color,float fontSize);
+CCControlButton * createButtonWithTitle(const char * title, const char* bg, const char* bg_hi,ccColor3B color=ccc3(0,0,0),float fontSize=20);
 
+void addImageToSpriteCache(const char* imageName);
 
 #endif

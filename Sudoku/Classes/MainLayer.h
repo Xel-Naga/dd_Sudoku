@@ -49,6 +49,8 @@ public:
 private:
     void onPressPlay(cocos2d::CCObject * pSender, cocos2d::extension::CCControlEvent pCCControlEvent);
 
+    void onPressOption(cocos2d::CCObject * pSender, cocos2d::extension::CCControlEvent pCCControlEvent);
+
     void onPressExit(cocos2d::CCObject * pSender, cocos2d::extension::CCControlEvent pCCControlEvent);
 
     void onPressMore(cocos2d::CCObject * pSender, cocos2d::extension::CCControlEvent pCCControlEvent);

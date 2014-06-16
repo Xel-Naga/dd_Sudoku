@@ -8,6 +8,8 @@
 #include "Resource.h"
 #include "Utils.h"
 
+#include "NCSScrollViewWithBar.h"
+
 USING_NS_CC;
 //暂时给一个游戏引擎取个名字XAXA，意思就是HAHA(哈哈)
 namespace XAXA {
@@ -35,7 +37,8 @@ class LevelLayer
 :public CCLayer 
 , public cocos2d::extension::CCBSelectorResolver
 , public cocos2d::extension::CCBMemberVariableAssigner
-, public cocos2d::extension::CCNodeLoaderListener {
+, public cocos2d::extension::CCNodeLoaderListener
+, public cocos2d::extension::CCScrollViewDelegate {
 public:
     LevelLayer() { CCLog("LevelLayer::Ctor()");}
     virtual ~LevelLayer() { CCLog("LevelLayer::Dtor()");}
@@ -49,12 +52,25 @@ public:
     virtual bool onAssignCCBMemberVariable(cocos2d::CCObject * pTarget, const char * pMemberVariableName, cocos2d::CCNode * pNode);
     virtual void onNodeLoaded(CCNode * pNode, cocos2d::extension::CCNodeLoader * pNodeLoader);
 
+    virtual void scrollViewDidScroll(cocos2d::extension::CCScrollView* view);
+    virtual void scrollViewDidZoom(cocos2d::extension::CCScrollView* view) {}
+
     void onPressLevelBtn(cocos2d::CCObject * pSender, cocos2d::extension::CCControlEvent pCCControlEvent);
 
     void goToLevel(LEVEL_SN_TYPE sn);
-    void menuGotoMainMenu(CCObject* pSender);
 
     void loadLevel();
+
+private:
+    void onPressBack(cocos2d::CCObject * pSender, cocos2d::extension::CCControlEvent pCCControlEvent);
+    void onPressUpBtn(cocos2d::CCObject *pSender, cocos2d::extension::CCControlEvent pCCControlEvent);
+    void onPressDownBtn(cocos2d::CCObject *pSender, cocos2d::extension::CCControlEvent pCCControlEvent);
+    void saveCurrentCol();
+    int loadCurrentCol();
+    //NCSScrollViewWithBar* _ScrollView;
+    cocos2d::extension::CCScrollView* _ScrollView;
+    int _colTotal;
+    int _colCurrent;
 };
 
 CREATE_AUTORELEASE_LOADER(LevelLayer);

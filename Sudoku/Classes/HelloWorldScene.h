@@ -28,12 +28,19 @@ public:
     // implement the "static node()" method manually
     CREATE_FUNC(HelloWorld);
 
+    void setValue(int number);
+
+    bool isPaused() {return _isPaused;}
+
 private:    
     // a selector callback
     void menuCloseCallback(CCObject* pSender);
     void menuGotoMainMenu(CCObject* pSender);
     void menuGoBackMenu(CCObject* pSender);
     void menuPauseCallback(CCObject* pSender);
+    void menuRevealPressed(cocos2d::CCObject *pSender, cocos2d::extension::CCControlEvent pCCControlEvent);
+    void menuResetPressed(CCObject* pSender);
+    void menuGoNextLevelPressed(cocos2d::CCObject *pSender, cocos2d::extension::CCControlEvent pCCControlEvent);
 
     virtual bool ccTouchBegan(CCTouch *pTouch, CCEvent *pEvent);
     virtual void ccTouchEnded(CCTouch *pTouch, CCEvent *pEvent);
@@ -50,24 +57,40 @@ private:
     void timeProcess(float dt);
     void update(float dt);
 
-    void saveScores();
-
     void addProgress(CCPoint origin, CCSize visibleSize);
     void addProgressBar(CCPoint origin, CCSize visibleSize);
 
-    void highLightGrid(CCTouch *pTouch);
+    bool highLightGrid(CCTouch *pTouch);
     void loadTexture();
 
     void unlockNextLevel();
 
-    void initMenu(CCSize visibleSize,CCPoint origin);
+    void initMenu(CCPoint origin, CCSize visibleSize);
+    //主要是输入完数字后的检查
+    void afterEnterValue(Grid* grid);
+
+    void saveLock();
+    void saveGameWin();//记录通关信息
+    void saveTimeCost();//记录当前花费时间
+    void saveInput(int col, int row, int value);//记录用户输入
+    void saveRevealer(Grid* grid);//记录照妖镜，应该有具体哪个位置,剩下几个照妖镜,使用了几个照妖镜
+
+    int loadTimeCost();
+    int loadRevealer(int col, int row);
+    int loadInput(int col, int row);
+
+    void initGameBoard(CCPoint origin, CCSize visibleSize);
+    void initPauseWindow(CCPoint origin);
+    void initRevealBtn(CCPoint origin, CCSize visibleSize);
+
+    void clearInput();
 
 private:
-    CCLabelBMFont*    _labelProgress;
     CCLabelBMFont*    _labelTimer0;
     float   _timeCost0;
     Grid* _inputGrid;
     CCSprite* _background;
+    CCScale9Sprite* _pauseWindow;
     cpSpace* m_pSpace; // strong ref
     cpShape* m_pWalls[4];
     CCTexture2D* m_pSpriteTexture; // weak ref

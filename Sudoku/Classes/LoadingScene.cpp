@@ -11,14 +11,15 @@ bool LoadingScene::prepareLoading() {
     bool bRet = false;
 
     _loadingNum = 0;
-    _totalNum = 10;//好像这个统计一定要少一个才能正常结束，不知道是啥bug
+    _totalNum = 10;
 
     do {
-        CCSprite *s2=CCSprite::create("Images/Loading_dark.png");//pa2.png是较暗的图片 
+        CCSprite *s2=CCSprite::create("Images/background1.png");//pa2.png是较暗的图片 
 	    CC_BREAK_IF(!s2);
 
-	    s2->setPosition(ccp(this->getContentSize().width/2,this->getContentSize().height/2));  
-	    addChild(s2,0);
+	    s2->setPosition(ccp(this->getContentSize().width/2,this->getContentSize().height/2));
+        //s2->setVisible(false);
+	    //addChild(s2,0);
 
 	    CCSprite *s=CCSprite::create("Images/Loading_light.png");//pa1.png是较亮的图片
 	    CC_BREAK_IF(!s);
@@ -32,14 +33,15 @@ bool LoadingScene::prepareLoading() {
 	    //转圈的CD实现  
 	    pt->setType(cocos2d::CCProgressTimerType(kCCProgressTimerTypeRadial));  
 	    //从中间到外的出现  
-	    //pt->setType(cocos2d::CCProgressTimerType(kCCProgressTimerTypeBar));  
+	    //pt->setType(cocos2d::CCProgressTimerType(kCCProgressTimerTypeBar)); 
+        pt->setVisible(false);
 	    this->addChild(pt,1,1); 
 
         //测试一下中文
         CCLabelTTF* loadingText = CCLabelTTF::create(WStrToUTF8(s_LoadingChs).c_str(),"Arial",30);
         loadingText->setColor(ccc3(247,176,71));
         loadingText->setPosition(ccp(this->getContentSize().width/2,this->getContentSize().height/2-s2->getContentSize().height/2-loadingText->getContentSize().height/2));
-        this->addChild(loadingText,2);
+        //this->addChild(loadingText,2);
 
         bRet = true;
     } while(0);
@@ -64,7 +66,7 @@ bool LoadingScene::init()
 
         CCTextureCache::sharedTextureCache()->addImageAsync(s_BackGround,this,callfuncO_selector(LoadingScene::loadCallBack)); 
  
-        CCTextureCache::sharedTextureCache()->addImageAsync(s_Grid,this,callfuncO_selector(LoadingScene::loadCallBack)); 
+        CCTextureCache::sharedTextureCache()->addImageAsync(s_grid,this,callfuncO_selector(LoadingScene::loadCallBack)); 
 
         CCTextureCache::sharedTextureCache()->addImageAsync(s_GridUp,this,callfuncO_selector(LoadingScene::loadCallBack)); 
 
@@ -101,14 +103,10 @@ cocos2d::CCScene* LoadingScene::scene()
 }
 
 void LoadingScene::loadCallBack(CCObject* ped){
+    //goWelcomeScene();
 	_loadingNum++;
-    //Sleep(100);
+
     CCProgressTimer* pt=(CCProgressTimer*)this->getChildByTag(1);
-    //for(int i =0; i < (int)(100.0/_totalNum); i++) {
-    //    CCLOG("loadCallBack() progress:%d%%",i+(int)now);
-    //    pt->setPercentage(i+now);
-    //    Sleep(300);
-    //}
 	pt->setPercentage(100.0*_loadingNum/_totalNum);
     CCLOG("LoadingScene::loadCallBack() loading:%d/%d",_loadingNum,_totalNum);
 	if(_loadingNum>=_totalNum){

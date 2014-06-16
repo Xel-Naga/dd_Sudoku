@@ -35,7 +35,7 @@ public:
 class LevelMgr: public BAGUA::Singleton<LevelMgr> {
 public:
     void clear();
-    void add_level(LevelMap* level);
+    void add_level(LevelMap* level,int lock);
     void loadLevelInfo();
     LevelInfo* get_level_info(LEVEL_SN_TYPE level_sn);
     LevelMap* get_level_map(LEVEL_SN_TYPE level_sn);
