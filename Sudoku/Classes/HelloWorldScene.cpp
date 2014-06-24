@@ -976,13 +976,13 @@ void HelloWorld::showWin() {
     CCActionInterval*  actionBack4 = CCScaleTo::create(0.05f,1.0f);
 
     CCControlButton * btnNextLevel = createButtonWithTitle("",s_nextLevel,s_nextLevel);
-    btnNextLevel->setPreferredSize(CCSize(64,32));
+    btnNextLevel->setPreferredSize(CCSize(128,64));
     btnNextLevel->addTargetWithActionForControlEvents(this,
-        cccontrol_selector(HelloWorld::menuRevealPressed), CCControlEventTouchUpInside); 
-    btnNextLevel->setAnchorPoint(ccp(0,1));
-    btnNextLevel->setPosition(visibleSize.width/2,visibleSize.height);
+        cccontrol_selector(HelloWorld::menuGoNextLevelPressed), CCControlEventTouchUpInside); 
+    btnNextLevel->setAnchorPoint(ccp(0.5,0.5));
+    btnNextLevel->setPosition(120,120);
 
-    badge->addChild(btnNextLevel,Z_HUD_LAYER);
+    badge->addChild(btnNextLevel,Z_TOP_LAYER+1);
 	//添加一些动作，可以仅仅是单个动作，也可以是多个动作组合
 	badge->runAction( CCSequence::create(scaleTo, actionBack1, actionBack2, actionBack3,actionBack4, NULL));
 
